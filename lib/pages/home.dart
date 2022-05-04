@@ -59,7 +59,13 @@ class _Home extends State<Home> {
                 print(email + password);
               },
               child: const Text('Register'),
-            )
+            ),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/login/', (route) => false);
+                },
+                child: const Text('Go to Other page')),
           ],
         ),
       ),
