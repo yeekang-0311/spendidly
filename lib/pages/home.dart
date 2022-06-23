@@ -61,11 +61,19 @@ class _Home extends State<Home> {
               child: const Text('Register'),
             ),
             TextButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil('/login/', (route) => false);
-                },
-                child: const Text('Go to Other page')),
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/login/', (route) => false);
+              },
+              child: const Text('Go to Other page'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/transaction/', (route) => false);
+              },
+              child: const Text('Add transaction'),
+            ),
           ],
         ),
       ),
