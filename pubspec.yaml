@@ -30,7 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  camera:
+  camera: ^0.9.4+2
   path_provider:
   path:
 

@@ -26,9 +26,6 @@ class _HomePageState extends State<CameraPage> {
 
   void initialiseCamera() {
     // Get available cameras
-    // setState(() {
-    //   firstCamera = cameras.first;
-    // });
 
     _controller = CameraController(
       camera!,
@@ -48,7 +45,7 @@ class _HomePageState extends State<CameraPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const SharedAppBar(title: 'Add Transaction', isBackButton: true),
+      appBar: const SharedAppBar(title: 'Take Picutre', isBackButton: true),
       body:
           // You must wait until the controller is initialized before displaying the
           // camera preview. Use a FutureBuilder to display a loading spinner until the
@@ -65,29 +62,31 @@ class _HomePageState extends State<CameraPage> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () async {
-        try {
-          // Ensure camera is initialized
-          await _initializeControllerFuture;
+      floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.camera_alt),
+          onPressed: () async {
+            try {
+              // Ensure camera is initialized
+              await _initializeControllerFuture;
 
-          // Attempt to take a picture and get the file `image`
-          // where it was saved.
-          final image = await _controller.takePicture();
+              // Attempt to take a picture and get the file `image`
+              // where it was saved.
+              final image = await _controller.takePicture();
 
-          // If the picture was taken, display it on a new screen.
-          await Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => DisplayPictureScreen(
-                // Pass the automatically generated path to
-                // the DisplayPictureScreen widget.
-                imagePath: image.path,
-              ),
-            ),
-          );
-        } catch (e) {
-          print(e);
-        }
-      }),
+              // If the picture was taken, display it on a new screen.
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => DisplayPictureScreen(
+                    // Pass the automatically generated path to
+                    // the DisplayPictureScreen widget.
+                    imagePath: image.path,
+                  ),
+                ),
+              );
+            } catch (e) {
+              print(e);
+            }
+          }),
     );
   }
 }
@@ -101,9 +100,13 @@ class DisplayPictureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Display the Picture')),
+      appBar: const SharedAppBar(
+        title: 'Display the Picture',
+        isBackButton: true,
+      ),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
+      // body: Image.file(File(imagePath)),
       body: Image.file(File(imagePath)),
     );
   }

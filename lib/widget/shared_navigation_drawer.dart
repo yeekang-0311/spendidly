@@ -27,7 +27,7 @@ class SharedNavigationDrawer extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             ListTile(
-              leading: const Icon(Icons.camera, color: Colors.white),
+              leading: const Icon(Icons.camera_alt, color: Colors.white),
               title: const Text(
                 'Camera',
                 style: TextStyle(color: Colors.white),
