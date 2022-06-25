@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spendidly/pages/camera_page.dart';
 
 class SharedNavigationDrawer extends StatelessWidget {
   const SharedNavigationDrawer({Key? key}) : super(key: key);
@@ -15,9 +16,29 @@ class SharedNavigationDrawer extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            buildMenuItem(text: 'People', icon: Icons.people),
+            ListTile(
+              leading: const Icon(Icons.people, color: Colors.white),
+              title: const Text(
+                'People',
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () {},
+              hoverColor: Colors.white70,
+            ),
             const SizedBox(height: 10),
-            buildMenuItem(text: 'Receipt images', icon: Icons.camera),
+            ListTile(
+              leading: const Icon(Icons.camera, color: Colors.white),
+              title: const Text(
+                'Camera',
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const CameraPage(),
+                ));
+              },
+              hoverColor: Colors.white70,
+            ),
             const SizedBox(height: 10),
             const Divider(color: Colors.white),
             const SizedBox(height: 10),

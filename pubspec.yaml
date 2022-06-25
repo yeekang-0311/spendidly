@@ -30,6 +30,10 @@ dependencies:
   flutter:
     sdk: flutter
 
+  camera:
+  path_provider:
+  path:
+
   # Hive
   hive: ^2.1.0
   hive_flutter: ^1.1.0
@@ -43,6 +47,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  #OCR
+  flutter_tesseract_ocr:
 
   # Hive
   hive_generator: ^1.1.2
