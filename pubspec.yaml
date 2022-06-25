@@ -48,9 +48,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  #OCR
-  flutter_tesseract_ocr:
-
   # Hive
   hive_generator: ^1.1.2
   build_runner: ^2.1.10
