@@ -1,10 +1,13 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:spendidly/main.dart';
 
 import '../widget/shared_app_bar.dart';
+
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({Key? key}) : super(key: key);
@@ -72,6 +75,11 @@ class _HomePageState extends State<CameraPage> {
               // Attempt to take a picture and get the file `image`
               // where it was saved.
               final image = await _controller.takePicture();
+              final extractedText =
+                  await readPictureTaken(InputImage.fromFilePath(image.path));
+              for (String line in extractedText.split('\n')) {
+                print(line + 'XXXXXX');
+              }
 
               // If the picture was taken, display it on a new screen.
               await Navigator.of(context).push(
@@ -107,7 +115,35 @@ class DisplayPictureScreen extends StatelessWidget {
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
       // body: Image.file(File(imagePath)),
-      body: Image.file(File(imagePath)),
+      body: Container(
+        child: Column(
+          children: [
+            Image.file(File(imagePath)),
+          ],
+        ),
+      ),
     );
   }
+}
+
+Future<String> readPictureTaken(InputImage img) async {
+  final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+  final RecognizedText recognizedText = await textRecognizer.processImage(img);
+  String text = recognizedText.text;
+  for (TextBlock block in recognizedText.blocks) {
+    final Rect rect = block.boundingBox;
+    final List<Point<int>> cornerPoints = block.cornerPoints;
+    print(cornerPoints[0]);
+    final String text = block.text;
+    final List<String> languages = block.recognizedLanguages;
+
+    for (TextLine line in block.lines) {
+      // Same getters as TextBlock
+      for (TextElement element in line.elements) {
+        // Same getters as TextBlock
+      }
+    }
+  }
+  textRecognizer.close();
+  return text;
 }
