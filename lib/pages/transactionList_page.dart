@@ -62,6 +62,22 @@ Widget buildContent(List<Transaction> transactions) {
 
     return Column(
       children: [
+        Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_circle_left),
+              onPressed: () {},
+            ),
+            OutlinedButton(
+              onPressed: () {},
+              child: Text("MONTH"),
+            ),
+            IconButton(
+              icon: const Icon(Icons.arrow_circle_right),
+              onPressed: () {},
+            )
+          ],
+        ),
         const SizedBox(height: 24),
         Text(
           'Net Expense: $newExpenseString',
