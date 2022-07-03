@@ -16,6 +16,7 @@ class _TransactionPageState extends State<AddTransactionPage> {
   late final TextEditingController _name;
   late final TextEditingController _amount;
   late String _category;
+  DateTime date = DateTime.now();
 
   @override
   void initState() {
@@ -41,6 +42,32 @@ class _TransactionPageState extends State<AddTransactionPage> {
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  fixedSize: Size(230, 50),
+                ),
+                onPressed: () async {
+                  DateTime? newDate = await showDatePicker(
+                    context: context,
+                    initialDate: date,
+                    lastDate: DateTime(2100),
+                    firstDate: DateTime(2000),
+                  );
+
+                  if (newDate == null) return;
+
+                  setState(() {
+                    date = newDate;
+                  });
+                },
+                child: Text(
+                  "Date: " + date.toString().substring(0, 10),
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 8),
               child: TextField(
@@ -121,7 +148,7 @@ class _TransactionPageState extends State<AddTransactionPage> {
   Future addTransaction(String name, double amount, String category) async {
     final transaction = Transaction()
       ..name = name
-      ..createdDate = DateTime.now()
+      ..createdDate = date
       ..amount = amount
       ..category = category;
 

@@ -19,12 +19,14 @@ class _TransactionPageState extends State<EditTransactionPage> {
   late final TextEditingController _name;
   late final TextEditingController _amount;
   late String _category;
+  late DateTime _date;
 
   @override
   void initState() {
     _name = TextEditingController(text: widget.trans.name);
     _amount = TextEditingController(text: widget.trans.amount.toString());
     _category = widget.trans.category;
+    _date = widget.trans.createdDate;
     super.initState();
   }
 
@@ -44,6 +46,32 @@ class _TransactionPageState extends State<EditTransactionPage> {
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  fixedSize: Size(230, 50),
+                ),
+                onPressed: () async {
+                  DateTime? newDate = await showDatePicker(
+                    context: context,
+                    initialDate: _date,
+                    lastDate: DateTime(2100),
+                    firstDate: DateTime(2000),
+                  );
+
+                  if (newDate == null) return;
+
+                  setState(() {
+                    _date = newDate;
+                  });
+                },
+                child: Text(
+                  "Date: " + _date.toString().substring(0, 10),
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 8),
               child: TextField(
@@ -136,6 +164,7 @@ class _TransactionPageState extends State<EditTransactionPage> {
     trans.name = _name.text;
     trans.amount = double.parse(_amount.text);
     trans.category = _category;
+    trans.createdDate = _date;
 
     trans.save();
     Navigator.of(context).pop();
