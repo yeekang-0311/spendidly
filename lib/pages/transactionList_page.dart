@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spendidly/model/transaction.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -62,21 +63,30 @@ Widget buildContent(List<Transaction> transactions) {
 
     return Column(
       children: [
-        Row(
-          children: [
-            IconButton(
-              icon: const Icon(Icons.arrow_circle_left),
-              onPressed: () {},
-            ),
-            OutlinedButton(
-              onPressed: () {},
-              child: Text("MONTH"),
-            ),
-            IconButton(
-              icon: const Icon(Icons.arrow_circle_right),
-              onPressed: () {},
-            )
-          ],
+        Container(
+          decoration: const BoxDecoration(
+            color: Color.fromRGBO(216, 226, 237, 0.93),
+          ),
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_circle_left),
+                onPressed: () {},
+              ),
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(264, 35),
+                  side: const BorderSide(width: 2.0, color: Colors.blue),
+                ),
+                onPressed: () {},
+                child: Text("MONTH"),
+              ),
+              IconButton(
+                icon: const Icon(Icons.arrow_circle_right),
+                onPressed: () {},
+              )
+            ],
+          ),
         ),
         const SizedBox(height: 24),
         Text(

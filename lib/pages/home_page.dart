@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:spendidly/pages/home_pie_chart.dart';
 import 'package:spendidly/pages/transactionList_page.dart';
-import 'package:spendidly/pages/addTransaction_page.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 import '../widget/shared_navigation_drawer.dart';
 import '../widget/shared_app_bar.dart';
@@ -16,7 +17,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final pages = [
-    Text("ASDASDASD"),
+    HomePieChart(),
     TransactionListPage(),
   ];
 
