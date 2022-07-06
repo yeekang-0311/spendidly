@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
+import 'package:spendidly/widget/category_icons.dart';
 
 import '../model/transaction.dart';
 import '../widget/indicator.dart';
@@ -26,157 +26,144 @@ class _HomePieChartState extends State<HomePieChart> {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 1.3,
-      child: Card(
-        color: Colors.white,
-        child: Row(
-          children: <Widget>[
-            const SizedBox(
-              height: 18,
-            ),
-            Expanded(
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: PieChart(
-                  PieChartData(
-                      pieTouchData: PieTouchData(touchCallback:
-                          (FlTouchEvent event, pieTouchResponse) {
-                        setState(() {
-                          if (!event.isInterestedForInteractions ||
-                              pieTouchResponse == null ||
-                              pieTouchResponse.touchedSection == null) {
-                            touchedIndex = -1;
-                            return;
-                          }
-                          touchedIndex = pieTouchResponse
-                              .touchedSection!.touchedSectionIndex;
-                        });
-                      }),
-                      borderData: FlBorderData(
-                        show: false,
-                      ),
-                      sectionsSpace: 0,
-                      centerSpaceRadius: 40,
-                      sections: showingSections()),
+      aspectRatio: 1,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          child: Card(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 10,
                 ),
-              ),
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const <Widget>[
-                Indicator(
-                  color: Color(0xff0293ee),
-                  text: 'General',
-                  isSquare: true,
+                const Text(
+                  "Monthly Expenses",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(
-                  height: 4,
-                ),
-                Indicator(
-                  color: Color(0xfff8b250),
-                  text: 'Food',
-                  isSquare: true,
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Indicator(
-                  color: Color(0xff845bef),
-                  text: 'Entertainment',
-                  isSquare: true,
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Indicator(
-                  color: Color.fromARGB(255, 19, 173, 211),
-                  text: 'Transportation',
-                  isSquare: true,
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Indicator(
-                  color: Color.fromARGB(255, 211, 19, 93),
-                  text: 'Sports',
-                  isSquare: true,
-                ),
-                SizedBox(
-                  height: 18,
+                AspectRatio(
+                  aspectRatio: 1.2,
+                  child: PieChart(
+                    PieChartData(
+                        pieTouchData: PieTouchData(touchCallback:
+                            (FlTouchEvent event, pieTouchResponse) {
+                          setState(() {
+                            if (!event.isInterestedForInteractions ||
+                                pieTouchResponse == null ||
+                                pieTouchResponse.touchedSection == null) {
+                              touchedIndex = -1;
+                              return;
+                            }
+                            touchedIndex = pieTouchResponse
+                                .touchedSection!.touchedSectionIndex;
+                          });
+                        }),
+                        borderData: FlBorderData(
+                          show: false,
+                        ),
+                        sectionsSpace: 0,
+                        centerSpaceRadius: 0,
+                        sections: showingSections()),
+                  ),
                 ),
               ],
             ),
-            const SizedBox(
-              width: 28,
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
   List<PieChartSectionData> showingSections() {
-    return List.generate(4, (i) {
+    return List.generate(5, (i) {
       final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 25.0 : 16.0;
-      final radius = isTouched ? 60.0 : 50.0;
+      final fontSize = isTouched ? 20.0 : 16.0;
+      final radius = isTouched ? 130.0 : 120.0;
+      final widgetSize = isTouched ? 55.0 : 40.0;
       switch (i) {
         case 0:
           return PieChartSectionData(
             color: const Color(0xff0293ee),
             value: _sumGe,
-            title: _sumGe.toString(),
+            title: _sumGe.toStringAsFixed(0) + "%",
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xffffffff)),
+            badgeWidget: _Badge(
+              CatIcons.general,
+              size: widgetSize,
+              borderColor: const Color(0xff0293ee),
+            ),
+            badgePositionPercentageOffset: .98,
           );
         case 1:
           return PieChartSectionData(
             color: const Color(0xfff8b250),
             value: _sumFo,
-            title: _sumFo.toString(),
+            title: _sumFo.toStringAsFixed(0) + "%",
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xffffffff)),
+            badgeWidget: _Badge(
+              CatIcons.food,
+              size: widgetSize,
+              borderColor: const Color(0xfff8b250),
+            ),
+            badgePositionPercentageOffset: .98,
           );
         case 2:
           return PieChartSectionData(
             color: const Color(0xff845bef),
             value: _sumEn,
-            title: _sumEn.toString(),
+            title: _sumEn.toStringAsFixed(0) + "%",
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xffffffff)),
+            badgeWidget: _Badge(
+              CatIcons.entertainment,
+              size: widgetSize,
+              borderColor: const Color(0xff845bef),
+            ),
+            badgePositionPercentageOffset: .98,
           );
         case 3:
           return PieChartSectionData(
             color: const Color.fromARGB(255, 19, 173, 211),
             value: _sumTr,
-            title: _sumTr.toString(),
+            title: _sumTr.toStringAsFixed(0) + "%",
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xffffffff)),
+            badgeWidget: _Badge(
+              CatIcons.transportation,
+              size: widgetSize,
+              borderColor: const Color.fromARGB(255, 19, 173, 211),
+            ),
+            badgePositionPercentageOffset: .98,
           );
         case 4:
           return PieChartSectionData(
             color: Color.fromARGB(255, 211, 19, 93),
             value: _sumSp,
-            title: _sumSp.toString(),
+            title: _sumSp.toStringAsFixed(0) + "%",
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xffffffff)),
+            badgeWidget: _Badge(
+              CatIcons.sports,
+              size: widgetSize,
+              borderColor: const Color.fromARGB(255, 211, 19, 93),
+            ),
+            badgePositionPercentageOffset: .98,
           );
         default:
           throw Error();
@@ -196,47 +183,90 @@ class _HomePieChartState extends State<HomePieChart> {
       double sumGe = 0, sumTr = 0, sumFo = 0, sumEn = 0, sumSp = 0;
 
       for (var i = 0; i < transactions.length; i++) {
-        switch (transactions[i].category) {
-          case 'General':
-            {
-              sumGe = sumGe + transactions[i].amount;
-              break;
-            }
-          case 'Food':
-            {
-              sumFo = sumFo + transactions[i].amount;
-              break;
-            }
-          case 'Transportation':
-            {
-              sumTr = sumTr + transactions[i].amount;
-              break;
-            }
-          case 'Entertainment':
-            {
-              sumEn = sumEn + transactions[i].amount;
-              break;
-            }
-          case 'Sports':
-            {
-              sumSp = sumSp + transactions[i].amount;
-              break;
-            }
-          default:
-            {
-              break;
-            }
+        if (transactions[i].createdDate.month == DateTime.now().month) {
+          switch (transactions[i].category) {
+            case 'General':
+              {
+                sumGe = sumGe + transactions[i].amount;
+                break;
+              }
+            case 'Food':
+              {
+                sumFo = sumFo + transactions[i].amount;
+                break;
+              }
+            case 'Transportation':
+              {
+                sumTr = sumTr + transactions[i].amount;
+                break;
+              }
+            case 'Entertainment':
+              {
+                sumEn = sumEn + transactions[i].amount;
+                break;
+              }
+            case 'Sports':
+              {
+                sumSp = sumSp + transactions[i].amount;
+                break;
+              }
+            default:
+              {
+                break;
+              }
+          }
         }
       }
-      print(sumFo);
 
+      double total = sumEn + sumSp + sumEn + sumGe + sumTr;
       setState(() {
-        _sumGe = sumGe;
-        _sumFo = sumFo;
-        _sumEn = sumEn;
-        _sumSp = sumSp;
-        _sumTr = sumTr;
+        _sumGe = ((sumGe / total) * 100);
+        _sumFo = ((sumFo / total) * 100);
+        _sumEn = ((sumEn / total) * 100);
+        _sumSp = ((sumSp / total) * 100);
+        _sumTr = ((sumTr / total) * 100);
       });
     }
+  }
+}
+
+class _Badge extends StatelessWidget {
+  final IconData icon;
+  final double size;
+  final Color borderColor;
+
+  const _Badge(
+    this.icon, {
+    Key? key,
+    required this.size,
+    required this.borderColor,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: PieChart.defaultDuration,
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: borderColor,
+          width: 2,
+        ),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Colors.black.withOpacity(.5),
+            offset: const Offset(3, 3),
+            blurRadius: 3,
+          ),
+        ],
+      ),
+      padding: EdgeInsets.all(size * .15),
+      child: Center(
+        child: Icon(icon),
+      ),
+    );
   }
 }

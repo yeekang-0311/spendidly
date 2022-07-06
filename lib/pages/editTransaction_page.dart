@@ -48,27 +48,39 @@ class _TransactionPageState extends State<EditTransactionPage> {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  fixedSize: Size(230, 50),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(
+                    color: const Color.fromARGB(255, 121, 121, 121),
+                  ),
                 ),
-                onPressed: () async {
-                  DateTime? newDate = await showDatePicker(
-                    context: context,
-                    initialDate: _date,
-                    lastDate: DateTime(2100),
-                    firstDate: DateTime(2000),
-                  );
+                child: Row(
+                  children: [
+                    const Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 27, horizontal: 5)),
+                    Text(
+                      _date.toString().substring(0, 10),
+                      style: const TextStyle(fontSize: 17),
+                    ),
+                    IconButton(
+                        onPressed: () async {
+                          DateTime? newDate = await showDatePicker(
+                            context: context,
+                            initialDate: _date,
+                            lastDate: DateTime(2100),
+                            firstDate: DateTime(2000),
+                          );
 
-                  if (newDate == null) return;
+                          if (newDate == null) return;
 
-                  setState(() {
-                    _date = newDate;
-                  });
-                },
-                child: Text(
-                  "Date: " + _date.toString().substring(0, 10),
-                  style: TextStyle(fontSize: 18),
+                          setState(() {
+                            _date = newDate;
+                          });
+                        },
+                        icon: const Icon(Icons.calendar_month))
+                  ],
                 ),
               ),
             ),
@@ -130,9 +142,9 @@ class _TransactionPageState extends State<EditTransactionPage> {
               children: [
                 ElevatedButton(
                   style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all(const Size(120, 12)),
+                    minimumSize: MaterialStateProperty.all(const Size(90, 8)),
                     padding:
-                        MaterialStateProperty.all(const EdgeInsets.all(20)),
+                        MaterialStateProperty.all(const EdgeInsets.all(15)),
                     backgroundColor: MaterialStateProperty.all(Colors.amber),
                   ),
                   onPressed: () {
@@ -140,11 +152,14 @@ class _TransactionPageState extends State<EditTransactionPage> {
                   },
                   child: const Text('Save'),
                 ),
+                const SizedBox(
+                  width: 12,
+                ),
                 ElevatedButton(
                   style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all(const Size(120, 12)),
+                    minimumSize: MaterialStateProperty.all(const Size(90, 8)),
                     padding:
-                        MaterialStateProperty.all(const EdgeInsets.all(20)),
+                        MaterialStateProperty.all(const EdgeInsets.all(15)),
                     backgroundColor: MaterialStateProperty.all(Colors.amber),
                   ),
                   onPressed: () {

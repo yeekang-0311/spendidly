@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spendidly/pages/camera_page.dart';
+import 'package:spendidly/pages/scanner_page.dart';
 
 class SharedNavigationDrawer extends StatelessWidget {
   const SharedNavigationDrawer({Key? key}) : super(key: key);
@@ -29,12 +29,12 @@ class SharedNavigationDrawer extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.camera_alt, color: Colors.white),
               title: const Text(
-                'Camera',
+                'Scanner',
                 style: TextStyle(color: Colors.white),
               ),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const CameraPage(),
+                  builder: (context) => const ScannerPage(),
                 ));
               },
               hoverColor: Colors.white70,

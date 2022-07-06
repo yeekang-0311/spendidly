@@ -48,7 +48,7 @@ class _HomePageState extends State<CameraPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const SharedAppBar(title: 'Take Picutre', isBackButton: true),
+      appBar: const SharedAppBar(title: 'Scan Picture', isBackButton: true),
       body:
           // You must wait until the controller is initialized before displaying the
           // camera preview. Use a FutureBuilder to display a loading spinner until the
@@ -78,8 +78,9 @@ class _HomePageState extends State<CameraPage> {
               final extractedText =
                   await readPictureTaken(InputImage.fromFilePath(image.path));
               for (String line in extractedText.split('\n')) {
-                print(line + 'XXXXXX');
+                // print(line + 'XXXXXX');
               }
+              print(extractedText);
 
               // If the picture was taken, display it on a new screen.
               await Navigator.of(context).push(

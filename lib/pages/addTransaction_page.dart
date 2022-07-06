@@ -6,7 +6,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../widget/shared_app_bar.dart';
 
 class AddTransactionPage extends StatefulWidget {
-  const AddTransactionPage({Key? key}) : super(key: key);
+  final String? cat;
+
+  const AddTransactionPage({
+    Key? key,
+    this.cat,
+  }) : super(key: key);
 
   @override
   State<AddTransactionPage> createState() => _TransactionPageState();
@@ -22,7 +27,11 @@ class _TransactionPageState extends State<AddTransactionPage> {
   void initState() {
     _name = TextEditingController();
     _amount = TextEditingController();
-    _category = 'General';
+    if (widget.cat != null) {
+      _category = widget.cat!;
+    } else {
+      _category = 'General';
+    }
     super.initState();
   }
 
@@ -44,27 +53,39 @@ class _TransactionPageState extends State<AddTransactionPage> {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  fixedSize: Size(230, 50),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(
+                    color: const Color.fromARGB(255, 121, 121, 121),
+                  ),
                 ),
-                onPressed: () async {
-                  DateTime? newDate = await showDatePicker(
-                    context: context,
-                    initialDate: date,
-                    lastDate: DateTime(2100),
-                    firstDate: DateTime(2000),
-                  );
+                child: Row(
+                  children: [
+                    const Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 27, horizontal: 5)),
+                    Text(
+                      date.toString().substring(0, 10),
+                      style: const TextStyle(fontSize: 17),
+                    ),
+                    IconButton(
+                        onPressed: () async {
+                          DateTime? newDate = await showDatePicker(
+                            context: context,
+                            initialDate: date,
+                            lastDate: DateTime(2100),
+                            firstDate: DateTime(2000),
+                          );
 
-                  if (newDate == null) return;
+                          if (newDate == null) return;
 
-                  setState(() {
-                    date = newDate;
-                  });
-                },
-                child: Text(
-                  "Date: " + date.toString().substring(0, 10),
-                  style: TextStyle(fontSize: 18),
+                          setState(() {
+                            date = newDate;
+                          });
+                        },
+                        icon: const Icon(Icons.calendar_month))
+                  ],
                 ),
               ),
             ),
@@ -126,9 +147,9 @@ class _TransactionPageState extends State<AddTransactionPage> {
               children: [
                 ElevatedButton(
                   style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all(const Size(120, 12)),
+                    minimumSize: MaterialStateProperty.all(const Size(90, 8)),
                     padding:
-                        MaterialStateProperty.all(const EdgeInsets.all(20)),
+                        MaterialStateProperty.all(const EdgeInsets.all(15)),
                     backgroundColor: MaterialStateProperty.all(Colors.amber),
                   ),
                   onPressed: () {
