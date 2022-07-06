@@ -10,6 +10,7 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 import 'package:http/http.dart' as http;
 import 'package:spendidly/widget/shared_app_bar.dart';
 
+import '../widget/shared_navigation_drawer.dart';
 import 'addTransaction_page.dart';
 
 class ScannerPage extends StatefulWidget {
@@ -92,9 +93,9 @@ class _ScannerPageState extends State<ScannerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SharedAppBar(
+      appBar: const SharedAppBar(
         title: "Receipt Scanner",
-        isBackButton: false,
+        isBackButton: true,
       ),
       body: isLoading
           ? const Center(
