@@ -7,10 +7,14 @@ import '../widget/shared_app_bar.dart';
 
 class AddTransactionPage extends StatefulWidget {
   final String? cat;
+  final double? price;
+  final DateTime? recognisedDate;
 
   const AddTransactionPage({
     Key? key,
     this.cat,
+    this.price,
+    this.recognisedDate,
   }) : super(key: key);
 
   @override
@@ -21,12 +25,25 @@ class _TransactionPageState extends State<AddTransactionPage> {
   late final TextEditingController _name;
   late final TextEditingController _amount;
   late String _category;
-  DateTime date = DateTime.now();
+  late DateTime date;
 
   @override
   void initState() {
     _name = TextEditingController();
-    _amount = TextEditingController();
+
+    if (widget.recognisedDate != null) {
+      date = widget.recognisedDate!;
+    } else {
+      date = DateTime.now();
+    }
+
+    if ((widget.price != null) & (widget.price != 0)) {
+      _amount = TextEditingController.fromValue(
+          TextEditingValue(text: widget.price.toString()));
+    } else {
+      _amount = TextEditingController();
+    }
+
     if (widget.cat != null) {
       _category = widget.cat!;
     } else {
