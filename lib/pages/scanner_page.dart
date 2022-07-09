@@ -185,6 +185,7 @@ class _ScannerPageState extends State<ScannerPage> {
       appBar: const SharedAppBar(
         title: "Receipt Scanner",
         isBackButton: true,
+        isSettings: true,
       ),
       body: isLoading
           ? const Center(

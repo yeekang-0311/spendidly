@@ -54,7 +54,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SharedAppBar(title: titles[_selectedIndex], isBackButton: false),
+      appBar: SharedAppBar(
+        title: titles[_selectedIndex],
+        isBackButton: false,
+        isSettings: true,
+      ),
       drawer: const SharedNavigationDrawer(),
       body: pages[_selectedIndex],
       bottomNavigationBar: CupertinoTabBar(

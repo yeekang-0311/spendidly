@@ -5,9 +5,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 class SharedAppBar extends StatelessWidget with PreferredSizeWidget {
   final String title;
   final bool isBackButton;
+  final bool isSettings;
 
   const SharedAppBar(
-      {Key? key, required this.title, required this.isBackButton})
+      {Key? key,
+      required this.title,
+      required this.isBackButton,
+      required this.isSettings})
       : super(key: key);
 
   @override
@@ -30,14 +34,23 @@ class SharedAppBar extends StatelessWidget with PreferredSizeWidget {
       centerTitle: true,
       title: Text(title),
       actions: [
-        IconButton(
-          icon: SvgPicture.asset(
-            "assets/icons/more.svg",
-            color: Colors.white,
-            height: 20,
-          ),
-          onPressed: () => {},
-        ),
+        isSettings
+            ? IconButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed("/settings/");
+                },
+                icon: Icon(Icons.settings),
+              )
+            : SizedBox(),
+
+        // IconButton(
+        //   icon: SvgPicture.asset(
+        //     "assets/icons/more.svg",
+        //     color: Colors.white,
+        //     height: 20,
+        //   ),
+        //   onPressed: () => {},
+        // ),
       ],
     );
   }

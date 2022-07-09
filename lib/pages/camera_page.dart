@@ -48,7 +48,11 @@ class _HomePageState extends State<CameraPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const SharedAppBar(title: 'Scan Picture', isBackButton: true),
+      appBar: const SharedAppBar(
+        title: 'Scan Picture',
+        isBackButton: true,
+        isSettings: true,
+      ),
       body:
           // You must wait until the controller is initialized before displaying the
           // camera preview. Use a FutureBuilder to display a loading spinner until the
@@ -112,6 +116,7 @@ class DisplayPictureScreen extends StatelessWidget {
       appBar: const SharedAppBar(
         title: 'Display the Picture',
         isBackButton: true,
+        isSettings: true,
       ),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.

@@ -63,7 +63,11 @@ class _TransactionPageState extends State<AddTransactionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const SharedAppBar(title: 'Add Transaction', isBackButton: true),
+      appBar: const SharedAppBar(
+        title: 'Add Transaction',
+        isBackButton: true,
+        isSettings: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: Column(
