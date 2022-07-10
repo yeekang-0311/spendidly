@@ -38,6 +38,9 @@ class _TransactionListPageState extends State<TransactionListPage> {
               .where(
                   (element) => element.createdDate.month == viewingMonth.month)
               .toList();
+          // Sort the transaction
+          filteredTransaction
+              .sort((a, b) => b.createdDate.compareTo(a.createdDate));
           return buildContent(filteredTransaction);
         },
       ),
