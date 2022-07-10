@@ -66,7 +66,7 @@ class _TransactionPageState extends State<AddTransactionPage> {
       appBar: const SharedAppBar(
         title: 'Add Transaction',
         isBackButton: true,
-        isSettings: true,
+        isSettings: false,
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),

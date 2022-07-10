@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:spendidly/pages/retypePasscode_page.dart';
+import 'package:spendidly/pages/setNotification_page.dart';
 import 'package:spendidly/pages/setPasscode_page.dart';
 import 'package:spendidly/widget/color_theme.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -19,11 +20,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   void initState() {
-    bool isEmptyBox = boxSettings.isEmpty;
-    if (isEmptyBox) {
-      // Fill in the default values
-      boxSettings.putAll({"passcodeEnmabled": "true", "passcode": "12345"});
-    }
     super.initState();
   }
 
@@ -46,7 +42,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   tileColor: ColorTheme.lightgray,
                 ),
                 ListTile(
-                  leading: Icon(Icons.lock),
+                  leading: const Icon(
+                    Icons.lock,
+                    size: 40,
+                  ),
                   title: Text('Passcode'),
                   subtitle: boxSettings.get("passcodeEnabled") == "true"
                       ? const Text(
@@ -81,15 +80,38 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 ListTile(
-                  title: Text("Notifications"),
+                  title: const Text("Notifications"),
                   dense: true,
                   tileColor: ColorTheme.lightgray,
+                  enabled: false,
                 ),
                 ListTile(
-                  leading: Icon(Icons.notifications),
+                  leading: const Icon(
+                    Icons.notifications,
+                    size: 40,
+                  ),
                   title: Text('Notification'),
-                  onTap: () {},
+                  subtitle: boxSettings.get("notificationEnabled") == "true"
+                      ? const Text(
+                          "ON",
+                          style: TextStyle(color: Colors.green),
+                        )
+                      : const Text(
+                          "OFF",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                  trailing: Switch(
+                      value: boxSettings.get("notificationEnabled") == "true",
+                      onChanged: (bool value) {}),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const SetNotificationPage()));
+                  },
                 ),
+                const Divider(
+                  height: 0,
+                  color: Colors.grey,
+                )
               ],
             );
           },

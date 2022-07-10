@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spendidly/pages/scanner_page.dart';
+import 'package:spendidly/pages/settings_page.dart';
 
 class SharedNavigationDrawer extends StatelessWidget {
   const SharedNavigationDrawer({Key? key}) : super(key: key);
@@ -42,28 +43,22 @@ class SharedNavigationDrawer extends StatelessWidget {
             const SizedBox(height: 10),
             const Divider(color: Colors.white),
             const SizedBox(height: 10),
-            buildMenuItem(text: 'Settings', icon: Icons.settings),
+            ListTile(
+              leading: const Icon(Icons.settings, color: Colors.white),
+              title: const Text(
+                'Settings',
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const SettingsPage(),
+                ));
+              },
+              hoverColor: Colors.white70,
+            )
           ],
         ),
       ),
     );
   }
-}
-
-Widget buildMenuItem({
-  required String text,
-  required IconData icon,
-}) {
-  const color = Colors.white;
-  const hoverColor = Colors.white70;
-
-  return ListTile(
-    leading: Icon(icon, color: color),
-    title: Text(
-      text,
-      style: const TextStyle(color: color),
-    ),
-    onTap: () {},
-    hoverColor: hoverColor,
-  );
 }

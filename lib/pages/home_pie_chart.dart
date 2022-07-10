@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:spendidly/widget/category_icons.dart';
+import 'package:spendidly/widget/color_theme.dart';
 
 import '../model/transaction.dart';
 import '../widget/indicator.dart';
@@ -29,44 +30,48 @@ class _HomePieChartState extends State<HomePieChart> {
       aspectRatio: 1,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Container(
-          child: Card(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 10,
+        child: Card(
+          color: ColorTheme.lightblue,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 18,
+              ),
+              const Text(
+                "Monthly Expenses",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              AspectRatio(
+                aspectRatio: 1.2,
+                child: PieChart(
+                  PieChartData(
+                      pieTouchData: PieTouchData(touchCallback:
+                          (FlTouchEvent event, pieTouchResponse) {
+                        setState(() {
+                          if (!event.isInterestedForInteractions ||
+                              pieTouchResponse == null ||
+                              pieTouchResponse.touchedSection == null) {
+                            touchedIndex = -1;
+                            return;
+                          }
+                          touchedIndex = pieTouchResponse
+                              .touchedSection!.touchedSectionIndex;
+                        });
+                      }),
+                      borderData: FlBorderData(
+                        show: false,
+                      ),
+                      sectionsSpace: 0,
+                      centerSpaceRadius: 0,
+                      sections: showingSections()),
                 ),
-                const Text(
-                  "Monthly Expenses",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                AspectRatio(
-                  aspectRatio: 1.2,
-                  child: PieChart(
-                    PieChartData(
-                        pieTouchData: PieTouchData(touchCallback:
-                            (FlTouchEvent event, pieTouchResponse) {
-                          setState(() {
-                            if (!event.isInterestedForInteractions ||
-                                pieTouchResponse == null ||
-                                pieTouchResponse.touchedSection == null) {
-                              touchedIndex = -1;
-                              return;
-                            }
-                            touchedIndex = pieTouchResponse
-                                .touchedSection!.touchedSectionIndex;
-                          });
-                        }),
-                        borderData: FlBorderData(
-                          show: false,
-                        ),
-                        sectionsSpace: 0,
-                        centerSpaceRadius: 0,
-                        sections: showingSections()),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
