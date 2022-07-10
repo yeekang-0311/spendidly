@@ -1,67 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:spendidly/model/recurrent_transaction.dart';
-import 'package:spendidly/model/transaction.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../widget/shared_app_bar.dart';
 
-class AddTransactionPage extends StatefulWidget {
-  final String? cat;
-  final double? price;
-  final DateTime? recognisedDate;
-
-  const AddTransactionPage({
-    Key? key,
-    this.cat,
-    this.price,
-    this.recognisedDate,
-  }) : super(key: key);
+class EditRecurrentTransactionPage extends StatefulWidget {
+  final RecurrentTransaction trans;
+  const EditRecurrentTransactionPage({Key? key, required this.trans})
+      : super(key: key);
 
   @override
-  State<AddTransactionPage> createState() => _TransactionPageState();
+  State<EditRecurrentTransactionPage> createState() =>
+      _EditRecurrentTransactionPageState();
 }
 
-class _TransactionPageState extends State<AddTransactionPage> {
+class _EditRecurrentTransactionPageState
+    extends State<EditRecurrentTransactionPage> {
   late final TextEditingController _name;
   late final TextEditingController _amount;
   late final TextEditingController _note;
   late String _category;
   late String _frequency;
-  late DateTime date;
 
   @override
   void initState() {
-    _name = TextEditingController();
-    _note = TextEditingController();
-    _frequency = "None";
-
-    if (widget.recognisedDate != null) {
-      date = widget.recognisedDate!;
-    } else {
-      date = DateTime.now();
-    }
-
-    if ((widget.price != null) & (widget.price != 0)) {
-      _amount = TextEditingController.fromValue(
-          TextEditingValue(text: widget.price.toString()));
-    } else {
-      _amount = TextEditingController();
-    }
-
-    if (widget.cat != null) {
-      _category = widget.cat!;
-    } else {
-      _category = 'General';
-    }
+    _frequency = widget.trans.frequency;
+    _name = TextEditingController(text: widget.trans.name);
+    _amount = TextEditingController(text: widget.trans.amount.toString());
+    _category = widget.trans.category;
+    _note = TextEditingController(text: widget.trans.note);
     super.initState();
   }
 
   @override
   void dispose() {
-    // Hive.box('transaction').close();
     _name.dispose();
     _amount.dispose();
+    _note.dispose();
     super.dispose();
   }
 
@@ -69,7 +45,7 @@ class _TransactionPageState extends State<AddTransactionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const SharedAppBar(
-        title: 'Add Transaction',
+        title: 'Edit Recurrent Transaction',
         isBackButton: true,
         isSettings: false,
       ),
@@ -79,62 +55,6 @@ class _TransactionPageState extends State<AddTransactionPage> {
           children: [
             Column(
               children: [
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 80,
-                      child: Text(
-                        "Date",
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ),
-                    Text(":"),
-                    SizedBox(
-                      width: 9,
-                    ),
-                    SizedBox(
-                      width: 245,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(
-                              color: const Color.fromARGB(255, 121, 121, 121),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 27, horizontal: 5)),
-                              Text(
-                                date.toString().substring(0, 10),
-                                style: const TextStyle(fontSize: 17),
-                              ),
-                              IconButton(
-                                  onPressed: () async {
-                                    DateTime? newDate = await showDatePicker(
-                                      context: context,
-                                      initialDate: date,
-                                      lastDate: DateTime(2100),
-                                      firstDate: DateTime(2000),
-                                    );
-
-                                    if (newDate == null) return;
-
-                                    setState(() {
-                                      date = newDate;
-                                    });
-                                  },
-                                  icon: const Icon(Icons.calendar_month))
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
                 Row(
                   children: [
                     const SizedBox(
@@ -306,7 +226,6 @@ class _TransactionPageState extends State<AddTransactionPage> {
                             });
                           },
                           items: <String>[
-                            'None',
                             'Daily',
                             'Weekly',
                             'Monthly',
@@ -338,10 +257,27 @@ class _TransactionPageState extends State<AddTransactionPage> {
                           _amount.text = '0';
                         }
                         addTransaction(_name.text, double.parse(_amount.text),
-                            _category, _note.text);
+                            _category, _note.text, DateTime.now(), _frequency);
                       },
                       child: const Text('Save'),
                     ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        minimumSize:
+                            MaterialStateProperty.all(const Size(90, 8)),
+                        padding:
+                            MaterialStateProperty.all(const EdgeInsets.all(15)),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.amber),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Cancel'),
+                    )
                   ],
                 ),
               ],
@@ -357,29 +293,17 @@ class _TransactionPageState extends State<AddTransactionPage> {
     double amount,
     String category,
     String note,
+    DateTime lastUpdate,
+    String freq,
   ) async {
-    final transaction = Transaction()
-      ..name = name
-      ..createdDate = date
-      ..amount = amount
-      ..category = category
-      ..note = note;
+    widget.trans.name = name;
+    widget.trans.lastUpdate = lastUpdate;
+    widget.trans.amount = amount;
+    widget.trans.category = category;
+    widget.trans.note = note;
+    widget.trans.frequency = freq;
 
-    Hive.box<Transaction>('transaction').add(transaction);
-
-    if (_frequency != "None") {
-      final recurrentTransaction = RecurrentTransaction()
-        ..name = name
-        ..lastUpdate = date
-        ..amount = amount
-        ..category = category
-        ..note = note
-        ..frequency = _frequency;
-
-      Hive.box<RecurrentTransaction>('recurrent_transaction')
-          .add(recurrentTransaction);
-    }
-
+    widget.trans.save();
     Navigator.of(context).pop();
   }
 }

@@ -1,43 +1,46 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'transaction.dart';
+part of 'recurrent_transaction.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class TransactionAdapter extends TypeAdapter<Transaction> {
+class RecurrentTransactionAdapter extends TypeAdapter<RecurrentTransaction> {
   @override
-  final int typeId = 0;
+  final int typeId = 1;
 
   @override
-  Transaction read(BinaryReader reader) {
+  RecurrentTransaction read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Transaction()
+    return RecurrentTransaction()
       ..name = fields[0] as String
-      ..createdDate = fields[1] as DateTime
+      ..lastUpdate = fields[1] as DateTime
       ..category = fields[2] as String
       ..amount = fields[3] as double
-      ..note = fields[4] == null ? '' : fields[4] as String;
+      ..note = fields[4] == null ? '' : fields[4] as String
+      ..frequency = fields[5] as String;
   }
 
   @override
-  void write(BinaryWriter writer, Transaction obj) {
+  void write(BinaryWriter writer, RecurrentTransaction obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
-      ..write(obj.createdDate)
+      ..write(obj.lastUpdate)
       ..writeByte(2)
       ..write(obj.category)
       ..writeByte(3)
       ..write(obj.amount)
       ..writeByte(4)
-      ..write(obj.note);
+      ..write(obj.note)
+      ..writeByte(5)
+      ..write(obj.frequency);
   }
 
   @override
@@ -46,7 +49,7 @@ class TransactionAdapter extends TypeAdapter<Transaction> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TransactionAdapter &&
+      other is RecurrentTransactionAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

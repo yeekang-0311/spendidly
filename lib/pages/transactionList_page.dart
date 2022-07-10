@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:spendidly/model/transaction.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -116,13 +114,6 @@ class _TransactionListPageState extends State<TransactionListPage> {
         ],
       );
     } else {
-      final netExpense = transactions.fold<double>(
-        0,
-        (previousValue, transaction) => previousValue + transaction.amount,
-      );
-      final newExpenseString = '\$${netExpense.toStringAsFixed(2)}';
-      const color = Colors.red;
-
       return Column(
         children: [
           Container(
@@ -168,16 +159,6 @@ class _TransactionListPageState extends State<TransactionListPage> {
               ],
             ),
           ),
-          const SizedBox(height: 24),
-          Text(
-            'Net Expense: $newExpenseString',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: color,
-            ),
-          ),
-          const SizedBox(height: 24),
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(8),

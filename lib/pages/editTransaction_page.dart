@@ -18,6 +18,7 @@ class EditTransactionPage extends StatefulWidget {
 class _TransactionPageState extends State<EditTransactionPage> {
   late final TextEditingController _name;
   late final TextEditingController _amount;
+  late final TextEditingController _note;
   late String _category;
   late DateTime _date;
 
@@ -27,6 +28,7 @@ class _TransactionPageState extends State<EditTransactionPage> {
     _amount = TextEditingController(text: widget.trans.amount.toString());
     _category = widget.trans.category;
     _date = widget.trans.createdDate;
+    _note = TextEditingController(text: widget.trans.note);
     super.initState();
   }
 
@@ -46,131 +48,240 @@ class _TransactionPageState extends State<EditTransactionPage> {
         isBackButton: true,
         isSettings: false,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 10, right: 10),
-        child: Column(
+        child: Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.all(
-                    color: const Color.fromARGB(255, 121, 121, 121),
-                  ),
-                ),
-                child: Row(
+            Column(
+              children: [
+                Row(
                   children: [
-                    const Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 27, horizontal: 5)),
-                    Text(
-                      _date.toString().substring(0, 10),
-                      style: const TextStyle(fontSize: 17),
+                    const SizedBox(
+                      width: 80,
+                      child: Text(
+                        "Date",
+                        style: TextStyle(fontSize: 15),
+                      ),
                     ),
-                    IconButton(
-                        onPressed: () async {
-                          DateTime? newDate = await showDatePicker(
-                            context: context,
-                            initialDate: _date,
-                            lastDate: DateTime(2100),
-                            firstDate: DateTime(2000),
-                          );
+                    Text(":"),
+                    SizedBox(
+                      width: 9,
+                    ),
+                    SizedBox(
+                      width: 245,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                              color: const Color.fromARGB(255, 121, 121, 121),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 27, horizontal: 5)),
+                              Text(
+                                _date.toString().substring(0, 10),
+                                style: const TextStyle(fontSize: 17),
+                              ),
+                              IconButton(
+                                  onPressed: () async {
+                                    DateTime? newDate = await showDatePicker(
+                                      context: context,
+                                      initialDate: _date,
+                                      lastDate: DateTime(2100),
+                                      firstDate: DateTime(2000),
+                                    );
 
-                          if (newDate == null) return;
+                                    if (newDate == null) return;
 
-                          setState(() {
-                            _date = newDate;
-                          });
-                        },
-                        icon: const Icon(Icons.calendar_month))
+                                    setState(() {
+                                      _date = newDate;
+                                    });
+                                  },
+                                  icon: const Icon(Icons.calendar_month))
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: TextField(
-                controller: _name,
-                decoration: const InputDecoration(
-                  hintText: 'Name',
-                  border: OutlineInputBorder(),
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 80,
+                      child: Text(
+                        "Name",
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                    Text(":"),
+                    SizedBox(
+                      width: 9,
+                    ),
+                    SizedBox(
+                      width: 245,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: TextField(
+                          controller: _name,
+                          decoration: const InputDecoration(
+                            hintText: 'Name',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: TextField(
-                controller: _amount,
-                decoration: const InputDecoration(
-                  hintText: 'Amount',
-                  border: OutlineInputBorder(),
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 80,
+                      child: Text(
+                        "Amount (RM)",
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                    Text(":"),
+                    SizedBox(
+                      width: 9,
+                    ),
+                    SizedBox(
+                      width: 245,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: TextField(
+                          controller: _amount,
+                          decoration: const InputDecoration(
+                            hintText: 'Amount',
+                            border: OutlineInputBorder(),
+                          ),
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                keyboardType: TextInputType.number,
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey, width: 1),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: DropdownButton<String>(
-                value: _category,
-                icon: const Icon(Icons.arrow_drop_down),
-                elevation: 16,
-                // style: const TextStyle(color: Colors.deepPurple),
-                isExpanded: true,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _category = newValue!;
-                  });
-                },
-                items: <String>[
-                  'General',
-                  'Entertainment',
-                  'Food',
-                  'Transportation',
-                  'Sports'
-                ].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ),
-            const Padding(padding: EdgeInsets.all(9)),
-            Row(
-              children: [
-                ElevatedButton(
-                  style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all(const Size(90, 8)),
-                    padding:
-                        MaterialStateProperty.all(const EdgeInsets.all(15)),
-                    backgroundColor: MaterialStateProperty.all(Colors.amber),
-                  ),
-                  onPressed: () {
-                    updateTransaction(widget.trans);
-                  },
-                  child: const Text('Save'),
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 80,
+                      child: Text(
+                        "Category",
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                    Text(":"),
+                    SizedBox(
+                      width: 9,
+                    ),
+                    SizedBox(
+                      width: 245,
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey, width: 1),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: DropdownButton<String>(
+                          value: _category,
+                          icon: const Icon(Icons.arrow_drop_down),
+                          elevation: 16,
+                          // style: const TextStyle(color: Colors.deepPurple),
+                          isExpanded: true,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _category = newValue!;
+                            });
+                          },
+                          items: <String>[
+                            'General',
+                            'Entertainment',
+                            'Food',
+                            'Transportation',
+                            'Sports'
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(
-                  width: 12,
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 80,
+                      child: Text(
+                        "Notes",
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                    Text(":"),
+                    SizedBox(
+                      width: 9,
+                    ),
+                    SizedBox(
+                      width: 245,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: TextField(
+                          controller: _note,
+                          decoration: const InputDecoration(
+                            hintText: 'Notes',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all(const Size(90, 8)),
-                    padding:
-                        MaterialStateProperty.all(const EdgeInsets.all(15)),
-                    backgroundColor: MaterialStateProperty.all(Colors.amber),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Cancel'),
-                )
+                const Padding(padding: EdgeInsets.all(9)),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        minimumSize:
+                            MaterialStateProperty.all(const Size(90, 8)),
+                        padding:
+                            MaterialStateProperty.all(const EdgeInsets.all(15)),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.amber),
+                      ),
+                      onPressed: () {
+                        updateTransaction(widget.trans);
+                      },
+                      child: const Text('Save'),
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        minimumSize:
+                            MaterialStateProperty.all(const Size(90, 8)),
+                        padding:
+                            MaterialStateProperty.all(const EdgeInsets.all(15)),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.amber),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Cancel'),
+                    )
+                  ],
+                ),
               ],
             ),
           ],
@@ -184,6 +295,7 @@ class _TransactionPageState extends State<EditTransactionPage> {
     trans.amount = double.parse(_amount.text);
     trans.category = _category;
     trans.createdDate = _date;
+    trans.note = _note.text;
 
     trans.save();
     Navigator.of(context).pop();
