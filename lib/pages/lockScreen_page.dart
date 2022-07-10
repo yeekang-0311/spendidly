@@ -45,8 +45,11 @@ class _LockScreenPageState extends State<LockScreenPage> {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  FlutterLogo(
+                  ImageIcon(
+                    AssetImage(
+                        "assets/icons/ic_stat_monetization_on_bigger.png"),
                     size: 80,
+                    color: Colors.white,
                   ),
                   const SizedBox(
                     height: 30,

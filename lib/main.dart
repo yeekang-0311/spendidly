@@ -41,8 +41,6 @@ void main() async {
   NotificationService().initNotification();
   tz.initializeTimeZones();
 
-  checkAndupdateRecurrentTask();
-
   runApp(MaterialApp(
     title: 'Spendidly',
     theme: ThemeData(
@@ -59,82 +57,4 @@ void main() async {
       '/transactionList/': (context) => const TransactionListPage(),
     },
   ));
-}
-
-Future addTransaction(
-  String name,
-  double amount,
-  String category,
-  String note,
-  DateTime date,
-) async {
-  final transaction = Transaction()
-    ..name = name
-    ..createdDate = date
-    ..amount = amount
-    ..category = category
-    ..note = note;
-
-  Hive.box<Transaction>('transaction').add(transaction);
-}
-
-extension DateOnlyCompare on DateTime {
-  bool isSameDate(DateTime other) {
-    return year == other.year && month == other.month && day == other.day;
-  }
-}
-
-void checkAndupdateRecurrentTask() {
-  var box = Hive.box<RecurrentTransaction>('recurrent_transaction');
-  final transactions = box.values.toList();
-
-  for (var currentTran in transactions) {
-    String period = currentTran.frequency;
-    switch (period) {
-      case "Daily":
-        while (true) {
-          if (currentTran.lastUpdate.isSameDate(DateTime.now())) {
-            break;
-          } else {
-            DateTime tempDateTime = DateTime(currentTran.lastUpdate.year,
-                currentTran.lastUpdate.month, currentTran.lastUpdate.day + 1);
-            addTransaction(currentTran.name, currentTran.amount,
-                currentTran.category, currentTran.note, tempDateTime);
-            currentTran.lastUpdate = tempDateTime;
-            currentTran.save();
-          }
-        }
-        break;
-      case "Weekly":
-        // If it is after 7 days then run again
-        while (true) {
-          if (currentTran.lastUpdate.isSameDate(DateTime.now())) {
-            break;
-          } else {
-            DateTime tempDateTime = DateTime(currentTran.lastUpdate.year,
-                currentTran.lastUpdate.month, currentTran.lastUpdate.day + 7);
-            addTransaction(currentTran.name, currentTran.amount,
-                currentTran.category, currentTran.note, tempDateTime);
-            currentTran.lastUpdate = tempDateTime;
-            currentTran.save();
-          }
-        }
-        break;
-      case "Monthly":
-        // If it is not the same month then run again
-        while (true) {
-          if (currentTran.lastUpdate.isSameDate(DateTime.now())) {
-            break;
-          } else {
-            DateTime tempDateTime = DateTime(currentTran.lastUpdate.year,
-                currentTran.lastUpdate.month + 1, currentTran.lastUpdate.day);
-            addTransaction(currentTran.name, currentTran.amount,
-                currentTran.category, currentTran.note, tempDateTime);
-            currentTran.lastUpdate = tempDateTime;
-            currentTran.save();
-          }
-        }
-        break;
-    }
-  }
 }
