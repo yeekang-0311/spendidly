@@ -63,43 +63,47 @@ class _TransactionListPageState extends State<TransactionListPage> {
             decoration: const BoxDecoration(
               color: Color.fromRGBO(216, 226, 237, 0.93),
             ),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_circle_left),
-                  iconSize: 30,
-                  onPressed: () {
-                    setState(() {
-                      viewingMonth = DateTime(viewingMonth.year,
-                          viewingMonth.month - 1, viewingMonth.day);
-                    });
-                  },
-                ),
-                Container(
-                    width: 264,
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 7),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          width: 2, color: Color.fromARGB(255, 76, 187, 252)),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Center(
-                        child: Text(
-                      DateFormat.yMMMM().format(viewingMonth),
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ))),
-                IconButton(
-                  icon: const Icon(Icons.arrow_circle_right),
-                  iconSize: 30,
-                  onPressed: () {
-                    setState(() {
-                      viewingMonth = DateTime(viewingMonth.year,
-                          viewingMonth.month + 1, viewingMonth.day);
-                    });
-                  },
-                )
-              ],
+            child: Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_circle_left),
+                    iconSize: 30,
+                    onPressed: () {
+                      setState(() {
+                        viewingMonth = DateTime(viewingMonth.year,
+                            viewingMonth.month - 1, viewingMonth.day);
+                      });
+                    },
+                  ),
+                  Container(
+                      width: 264,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 30, vertical: 7),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            width: 2, color: Color.fromARGB(255, 76, 187, 252)),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Center(
+                          child: Text(
+                        DateFormat.yMMMM().format(viewingMonth),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ))),
+                  IconButton(
+                    icon: const Icon(Icons.arrow_circle_right),
+                    iconSize: 30,
+                    onPressed: () {
+                      setState(() {
+                        viewingMonth = DateTime(viewingMonth.year,
+                            viewingMonth.month + 1, viewingMonth.day);
+                      });
+                    },
+                  )
+                ],
+              ),
             ),
           ),
           const SizedBox(
@@ -121,6 +125,9 @@ class _TransactionListPageState extends State<TransactionListPage> {
     } else {
       return Column(
         children: [
+          SizedBox(
+            height: 5,
+          ),
           Container(
             decoration: const BoxDecoration(
               color: Color.fromRGBO(216, 226, 237, 0.93),
@@ -160,9 +167,16 @@ class _TransactionListPageState extends State<TransactionListPage> {
                           viewingMonth.month + 1, viewingMonth.day);
                     });
                   },
-                )
+                ),
               ],
             ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Divider(
+            height: 0,
+            color: Colors.grey,
           ),
           Expanded(
             child: ListView.builder(
