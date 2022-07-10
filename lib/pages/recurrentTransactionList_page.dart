@@ -4,6 +4,7 @@ import 'package:spendidly/widget/category_icons.dart';
 import 'package:spendidly/widget/shared_app_bar.dart';
 
 import '../model/recurrent_transaction.dart';
+import '../widget/color_theme.dart';
 import 'editRecurrentTransaction_page.dart';
 
 class RecurrentTransactionListPage extends StatefulWidget {
@@ -29,6 +30,7 @@ class _RecurrentTransactionListPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorTheme.white,
       appBar: const SharedAppBar(
         isBackButton: true,
         title: "Recurrent Transactions Page",
@@ -104,30 +106,38 @@ class _RecurrentTransactionListPageState
     final amount = '\$' + transaction.amount.toStringAsFixed(2);
 
     return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       color: Colors.white,
-      child: ExpansionTile(
-        leading: Icon(
-          CatIcons.getIcon(category),
-          size: 50,
-        ),
-        tilePadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-        title: Text(
-          transaction.name,
-          maxLines: 2,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-        ),
-        subtitle: Text(frequency),
-        trailing: Container(
-          width: 60,
-          child: Text(
-            amount,
-            style: const TextStyle(
-                color: color, fontWeight: FontWeight.bold, fontSize: 16),
+      child: Theme(
+        data: ThemeData().copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          leading: Icon(
+            CatIcons.getIcon(category),
+            size: 50,
           ),
+          tilePadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+          title: Text(
+            transaction.name,
+            maxLines: 2,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          subtitle: Text(frequency),
+          trailing: Container(
+            width: 60,
+            child: Text(
+              amount,
+              style: const TextStyle(
+                  color: color, fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+          ),
+          children: [
+            const Divider(
+              height: 0,
+              color: Colors.black,
+            ),
+            buildButtons(context, transaction),
+          ],
         ),
-        children: [
-          buildButtons(context, transaction),
-        ],
       ),
     );
   }
