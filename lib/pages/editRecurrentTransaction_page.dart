@@ -64,8 +64,8 @@ class _EditRecurrentTransactionPageState
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
-                    Text(":"),
-                    SizedBox(
+                    const Text(":"),
+                    const SizedBox(
                       width: 9,
                     ),
                     SizedBox(
@@ -92,8 +92,8 @@ class _EditRecurrentTransactionPageState
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
-                    Text(":"),
-                    SizedBox(
+                    const Text(":"),
+                    const SizedBox(
                       width: 9,
                     ),
                     SizedBox(
@@ -121,8 +121,8 @@ class _EditRecurrentTransactionPageState
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
-                    Text(":"),
-                    SizedBox(
+                    const Text(":"),
+                    const SizedBox(
                       width: 9,
                     ),
                     SizedBox(
@@ -172,8 +172,8 @@ class _EditRecurrentTransactionPageState
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
-                    Text(":"),
-                    SizedBox(
+                    const Text(":"),
+                    const SizedBox(
                       width: 9,
                     ),
                     SizedBox(
@@ -200,8 +200,8 @@ class _EditRecurrentTransactionPageState
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
-                    Text(":"),
-                    SizedBox(
+                    const Text(":"),
+                    const SizedBox(
                       width: 9,
                     ),
                     SizedBox(
@@ -254,14 +254,33 @@ class _EditRecurrentTransactionPageState
                       ),
                       onPressed: () {
                         if (_amount.text.isEmpty) {
-                          _amount.text = '0';
+                          // _amount.text = '0';
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Amount should not be empty"),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        } else if (_name.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Name should not be empty"),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        } else {
+                          addTransaction(
+                              _name.text,
+                              double.parse(_amount.text),
+                              _category,
+                              _note.text,
+                              DateTime.now(),
+                              _frequency);
                         }
-                        addTransaction(_name.text, double.parse(_amount.text),
-                            _category, _note.text, DateTime.now(), _frequency);
                       },
                       child: const Text('Save'),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 15,
                     ),
                     ElevatedButton(

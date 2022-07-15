@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
               child: SpinKitCircle(
                 color: Colors.blueAccent,
                 size: 150,
-                duration: const Duration(seconds: 2),
+                duration: Duration(seconds: 2),
               ),
             )
           : pages[_selectedIndex],

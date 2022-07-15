@@ -147,8 +147,8 @@ class _RecurrentTransactionListPageState
         children: [
           Expanded(
             child: TextButton.icon(
-              label: Text('Edit'),
-              icon: Icon(Icons.edit),
+              label: const Text('Edit'),
+              icon: const Icon(Icons.edit),
               onPressed: () => {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) =>
@@ -159,8 +159,8 @@ class _RecurrentTransactionListPageState
           ),
           Expanded(
             child: TextButton.icon(
-              label: Text('Delete'),
-              icon: Icon(Icons.delete),
+              label: const Text('Delete'),
+              icon: const Icon(Icons.delete),
               onPressed: () => {deleteTransaction(transaction)},
             ),
           )

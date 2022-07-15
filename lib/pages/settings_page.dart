@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:spendidly/pages/retypePasscode_page.dart';
 import 'package:spendidly/pages/setNotification_page.dart';
 import 'package:spendidly/pages/setPasscode_page.dart';
@@ -37,7 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
             return ListView(
               children: <Widget>[
                 ListTile(
-                  title: Text("Passcode"),
+                  title: const Text("Passcode"),
                   dense: true,
                   tileColor: ColorTheme.lightgray,
                 ),
@@ -46,7 +45,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Icons.lock,
                     size: 40,
                   ),
-                  title: Text('Passcode'),
+                  title: const Text('Passcode'),
                   subtitle: boxSettings.get("passcodeEnabled") == "true"
                       ? const Text(
                           "ON",
@@ -90,7 +89,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Icons.notifications,
                     size: 40,
                   ),
-                  title: Text('Notification'),
+                  title: const Text('Notification'),
                   subtitle: boxSettings.get("notificationEnabled") == "true"
                       ? const Text(
                           "ON",

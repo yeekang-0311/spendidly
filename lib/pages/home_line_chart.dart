@@ -275,6 +275,15 @@ class HomeLineChartState extends State<HomeLineChart> {
 
     if (transactions.isEmpty) {
       //Do empty stuff
+      setState(() {
+        _sumMo = 0;
+        _sumTu = 0;
+        _sumWe = 0;
+        _sumTh = 0;
+        _sumFr = 0;
+        _sumSa = 0;
+        _sumSu = 0;
+      });
     } else {
       double sumMo = 0,
           sumTu = 0,

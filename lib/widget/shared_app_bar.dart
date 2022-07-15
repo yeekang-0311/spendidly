@@ -39,18 +39,9 @@ class SharedAppBar extends StatelessWidget with PreferredSizeWidget {
                 onPressed: () {
                   Navigator.of(context).pushNamed("/settings/");
                 },
-                icon: Icon(Icons.settings),
+                icon: const Icon(Icons.settings),
               )
-            : SizedBox(),
-
-        // IconButton(
-        //   icon: SvgPicture.asset(
-        //     "assets/icons/more.svg",
-        //     color: Colors.white,
-        //     height: 20,
-        //   ),
-        //   onPressed: () => {},
-        // ),
+            : const SizedBox(),
       ],
     );
   }

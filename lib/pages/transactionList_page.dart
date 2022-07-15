@@ -79,17 +79,18 @@ class _TransactionListPageState extends State<TransactionListPage> {
                   ),
                   Container(
                       width: 264,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 30, vertical: 7),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 7),
                       decoration: BoxDecoration(
                         border: Border.all(
-                            width: 2, color: Color.fromARGB(255, 76, 187, 252)),
+                            width: 2,
+                            color: const Color.fromARGB(255, 76, 187, 252)),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Center(
                           child: Text(
                         DateFormat.yMMMM().format(viewingMonth),
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ))),
                   IconButton(
@@ -125,7 +126,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
     } else {
       return Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Container(
@@ -146,17 +147,19 @@ class _TransactionListPageState extends State<TransactionListPage> {
                 ),
                 Container(
                     width: 264,
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 7),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 30, vertical: 7),
                     decoration: BoxDecoration(
                       border: Border.all(
-                          width: 2, color: Color.fromARGB(255, 76, 187, 252)),
+                          width: 2,
+                          color: const Color.fromARGB(255, 76, 187, 252)),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Center(
                         child: Text(
                       DateFormat.yMMMM().format(viewingMonth),
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ))),
                 IconButton(
                   icon: const Icon(Icons.arrow_circle_right),
@@ -171,10 +174,10 @@ class _TransactionListPageState extends State<TransactionListPage> {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
-          Divider(
+          const Divider(
             height: 0,
             color: Colors.grey,
           ),
@@ -219,7 +222,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
           subtitle: Text(date),
-          trailing: Container(
+          trailing: SizedBox(
             width: 60,
             child: Text(
               amount,
@@ -243,8 +246,8 @@ class _TransactionListPageState extends State<TransactionListPage> {
         children: [
           Expanded(
             child: TextButton.icon(
-              label: Text('Edit'),
-              icon: Icon(Icons.edit),
+              label: const Text('Edit'),
+              icon: const Icon(Icons.edit),
               onPressed: () => {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => EditTransactionPage(trans: transaction),
@@ -254,8 +257,8 @@ class _TransactionListPageState extends State<TransactionListPage> {
           ),
           Expanded(
             child: TextButton.icon(
-              label: Text('Delete'),
-              icon: Icon(Icons.delete),
+              label: const Text('Delete'),
+              icon: const Icon(Icons.delete),
               onPressed: () => {deleteTransaction(transaction)},
             ),
           )

@@ -44,7 +44,7 @@ class _TransactionPageState extends State<EditTransactionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const SharedAppBar(
-        title: 'Add Transaction',
+        title: 'Edit Transaction',
         isBackButton: true,
         isSettings: false,
       ),
@@ -63,8 +63,8 @@ class _TransactionPageState extends State<EditTransactionPage> {
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
-                    Text(":"),
-                    SizedBox(
+                    const Text(":"),
+                    const SizedBox(
                       width: 9,
                     ),
                     SizedBox(
@@ -119,8 +119,8 @@ class _TransactionPageState extends State<EditTransactionPage> {
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
-                    Text(":"),
-                    SizedBox(
+                    const Text(":"),
+                    const SizedBox(
                       width: 9,
                     ),
                     SizedBox(
@@ -147,8 +147,8 @@ class _TransactionPageState extends State<EditTransactionPage> {
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
-                    Text(":"),
-                    SizedBox(
+                    const Text(":"),
+                    const SizedBox(
                       width: 9,
                     ),
                     SizedBox(
@@ -176,8 +176,8 @@ class _TransactionPageState extends State<EditTransactionPage> {
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
-                    Text(":"),
-                    SizedBox(
+                    const Text(":"),
+                    const SizedBox(
                       width: 9,
                     ),
                     SizedBox(
@@ -227,8 +227,8 @@ class _TransactionPageState extends State<EditTransactionPage> {
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
-                    Text(":"),
-                    SizedBox(
+                    const Text(":"),
+                    const SizedBox(
                       width: 9,
                     ),
                     SizedBox(
@@ -259,11 +259,28 @@ class _TransactionPageState extends State<EditTransactionPage> {
                             MaterialStateProperty.all(Colors.amber),
                       ),
                       onPressed: () {
-                        updateTransaction(widget.trans);
+                        if (_amount.text.isEmpty) {
+                          // _amount.text = '0';
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Amount should not be empty"),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        } else if (_name.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Name should not be empty"),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        } else {
+                          updateTransaction(widget.trans);
+                        }
                       },
                       child: const Text('Save'),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 15,
                     ),
                     ElevatedButton(

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -24,6 +23,7 @@ class _ScannerPageState extends State<ScannerPage> {
   double price = 0;
   DateTime date = DateTime.now();
   late TextRecognizer textRecognizer;
+  final _imgPicker = ImagePicker();
 
   @override
   void initState() {
@@ -37,43 +37,46 @@ class _ScannerPageState extends State<ScannerPage> {
     super.dispose();
   }
 
-  Future pickImage(ImageSource source) async {
+  Future pickImageAndGetPath() async {
     try {
-      final image =
-          await ImagePicker().pickImage(source: source, imageQuality: 100);
+      final image = await _imgPicker.pickImage(
+          source: ImageSource.gallery, imageQuality: 100);
       if (image == null) return;
-
-      // Start loading
-      setState(() {
-        isLoading = true;
-        price = 0;
-        date = DateTime.now();
-      });
-      var imageTemp = File(image.path);
-
-      // Extract the text from the image
-      final extractedText =
-          await readPictureTaken(InputImage.fromFilePath(imageTemp.path));
-      print(extractedText);
-
-      // Send to server for categorisation
-      final cat = await categorizeImg(extractedText);
-
-      setState(() {
-        isLoading = false;
-      });
-
-      // Navigate to add transaction page
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => AddTransactionPage(
-          cat: cat,
-          price: price,
-          recognisedDate: date,
-        ),
-      ));
+      return image.path;
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
     }
+    return "";
+  }
+
+  Future extractAndCategorize(String imgPath) async {
+    // Start loading
+    setState(() {
+      isLoading = true;
+      price = 0;
+      date = DateTime.now();
+    });
+
+    // Extract the text from the image
+    final extractedText =
+        await readPictureTaken(InputImage.fromFilePath(imgPath));
+    print(extractedText);
+
+    // Send to server for categorisation
+    final cat = await categorizeImg(extractedText);
+
+    setState(() {
+      isLoading = false;
+    });
+
+    // Navigate to add transaction page
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => AddTransactionPage(
+        cat: cat,
+        price: price,
+        recognisedDate: date,
+      ),
+    ));
   }
 
   Future<String> readPictureTaken(InputImage img) async {
@@ -158,27 +161,6 @@ class _ScannerPageState extends State<ScannerPage> {
     }
   }
 
-  uploadImg(String title, File file) async {
-    var url = Uri.parse('http://192.168.0.161:8080/upload');
-    var request = http.MultipartRequest("POST", url);
-    request.fields['title'] = "dummyImg";
-    request.headers['Authorization'] = "";
-
-    var picture = http.MultipartFile.fromBytes(
-        'image', await file.readAsBytes(),
-        filename: title);
-
-    request.files.add(picture);
-
-    var response = await request.send();
-
-    var responseData = await response.stream.toBytes();
-
-    var result = String.fromCharCodes(responseData);
-
-    print(result);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -192,10 +174,10 @@ class _ScannerPageState extends State<ScannerPage> {
               child: SpinKitCircle(
                 color: Colors.blueAccent,
                 size: 150,
-                duration: const Duration(seconds: 2),
+                duration: Duration(seconds: 2),
               ),
             )
-          : Container(
+          : SizedBox(
               width: 400,
               child: Column(
                 children: [
@@ -217,12 +199,16 @@ class _ScannerPageState extends State<ScannerPage> {
                     height: 60,
                   ),
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(fixedSize: Size(250, 50)),
-                    onPressed: () {
-                      pickImage(ImageSource.gallery);
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(250, 50)),
+                    onPressed: () async {
+                      String imgPath = await pickImageAndGetPath();
+                      if (imgPath != "") {
+                        await extractAndCategorize(imgPath);
+                      }
                     },
                     child: Padding(
-                      padding: EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
                       child: Row(children: const [
                         Icon(Icons.image),
                         SizedBox(
@@ -236,12 +222,18 @@ class _ScannerPageState extends State<ScannerPage> {
                     height: 15,
                   ),
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(fixedSize: Size(250, 50)),
-                    onPressed: () {
-                      pickImage(ImageSource.camera);
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(250, 50)),
+                    onPressed: () async {
+                      var imgPath = await Navigator.of(context)
+                          .pushNamed("/takePicture/");
+                      if (imgPath.toString() != "") {
+                        await extractAndCategorize(imgPath.toString());
+                      }
+                      // var status = await Permission.camera.status;
                     },
                     child: Padding(
-                      padding: EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
                       child: Row(children: const [
                         Icon(Icons.camera_alt),
                         SizedBox(

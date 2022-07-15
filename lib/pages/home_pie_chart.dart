@@ -5,7 +5,6 @@ import 'package:spendidly/widget/category_icons.dart';
 import 'package:spendidly/widget/color_theme.dart';
 
 import '../model/transaction.dart';
-import '../widget/indicator.dart';
 
 class HomePieChart extends StatefulWidget {
   const HomePieChart({Key? key}) : super(key: key);
@@ -46,31 +45,45 @@ class _HomePieChartState extends State<HomePieChart> {
               const SizedBox(
                 height: 10,
               ),
-              AspectRatio(
-                aspectRatio: 1.2,
-                child: PieChart(
-                  PieChartData(
-                      pieTouchData: PieTouchData(touchCallback:
-                          (FlTouchEvent event, pieTouchResponse) {
-                        setState(() {
-                          if (!event.isInterestedForInteractions ||
-                              pieTouchResponse == null ||
-                              pieTouchResponse.touchedSection == null) {
-                            touchedIndex = -1;
-                            return;
-                          }
-                          touchedIndex = pieTouchResponse
-                              .touchedSection!.touchedSectionIndex;
-                        });
-                      }),
-                      borderData: FlBorderData(
-                        show: false,
+              Hive.box<Transaction>('transaction').isEmpty
+                  ? Center(
+                      child: Column(
+                        children: const [
+                          SizedBox(
+                            height: 80,
+                          ),
+                          Text(
+                            "No Expenses Yet !!",
+                            style: TextStyle(fontSize: 25),
+                          ),
+                        ],
                       ),
-                      sectionsSpace: 0,
-                      centerSpaceRadius: 0,
-                      sections: showingSections()),
-                ),
-              ),
+                    )
+                  : AspectRatio(
+                      aspectRatio: 1.2,
+                      child: PieChart(
+                        PieChartData(
+                            pieTouchData: PieTouchData(touchCallback:
+                                (FlTouchEvent event, pieTouchResponse) {
+                              setState(() {
+                                if (!event.isInterestedForInteractions ||
+                                    pieTouchResponse == null ||
+                                    pieTouchResponse.touchedSection == null) {
+                                  touchedIndex = -1;
+                                  return;
+                                }
+                                touchedIndex = pieTouchResponse
+                                    .touchedSection!.touchedSectionIndex;
+                              });
+                            }),
+                            borderData: FlBorderData(
+                              show: false,
+                            ),
+                            sectionsSpace: 0,
+                            centerSpaceRadius: 0,
+                            sections: showingSections()),
+                      ),
+                    ),
             ],
           ),
         ),
@@ -155,7 +168,7 @@ class _HomePieChartState extends State<HomePieChart> {
           );
         case 4:
           return PieChartSectionData(
-            color: Color.fromARGB(255, 211, 19, 93),
+            color: const Color.fromARGB(255, 211, 19, 93),
             value: _sumSp,
             title: _sumSp.toStringAsFixed(0) + "%",
             radius: radius,
@@ -184,6 +197,13 @@ class _HomePieChartState extends State<HomePieChart> {
 
     if (transactions.isEmpty) {
       //Do empty stuff
+      setState(() {
+        _sumGe = 0;
+        _sumFo = 0;
+        _sumEn = 0;
+        _sumSp = 0;
+        _sumTr = 0;
+      });
     } else {
       double sumGe = 0, sumTr = 0, sumFo = 0, sumEn = 0, sumSp = 0;
 
@@ -222,7 +242,6 @@ class _HomePieChartState extends State<HomePieChart> {
           }
         }
       }
-
       double total = sumEn + sumSp + sumEn + sumGe + sumTr;
       setState(() {
         _sumGe = ((sumGe / total) * 100);

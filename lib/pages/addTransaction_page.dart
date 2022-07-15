@@ -88,8 +88,8 @@ class _TransactionPageState extends State<AddTransactionPage> {
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
-                    Text(":"),
-                    SizedBox(
+                    const Text(":"),
+                    const SizedBox(
                       width: 9,
                     ),
                     SizedBox(
@@ -144,8 +144,8 @@ class _TransactionPageState extends State<AddTransactionPage> {
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
-                    Text(":"),
-                    SizedBox(
+                    const Text(":"),
+                    const SizedBox(
                       width: 9,
                     ),
                     SizedBox(
@@ -172,8 +172,8 @@ class _TransactionPageState extends State<AddTransactionPage> {
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
-                    Text(":"),
-                    SizedBox(
+                    const Text(":"),
+                    const SizedBox(
                       width: 9,
                     ),
                     SizedBox(
@@ -201,8 +201,8 @@ class _TransactionPageState extends State<AddTransactionPage> {
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
-                    Text(":"),
-                    SizedBox(
+                    const Text(":"),
+                    const SizedBox(
                       width: 9,
                     ),
                     SizedBox(
@@ -252,8 +252,8 @@ class _TransactionPageState extends State<AddTransactionPage> {
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
-                    Text(":"),
-                    SizedBox(
+                    const Text(":"),
+                    const SizedBox(
                       width: 9,
                     ),
                     SizedBox(
@@ -280,8 +280,8 @@ class _TransactionPageState extends State<AddTransactionPage> {
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
-                    Text(":"),
-                    SizedBox(
+                    const Text(":"),
+                    const SizedBox(
                       width: 9,
                     ),
                     SizedBox(
@@ -335,10 +335,24 @@ class _TransactionPageState extends State<AddTransactionPage> {
                       ),
                       onPressed: () {
                         if (_amount.text.isEmpty) {
-                          _amount.text = '0';
+                          // _amount.text = '0';
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Amount should not be empty"),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        } else if (_name.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Name should not be empty"),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        } else {
+                          addTransaction(_name.text, double.parse(_amount.text),
+                              _category, _note.text);
                         }
-                        addTransaction(_name.text, double.parse(_amount.text),
-                            _category, _note.text);
                       },
                       child: const Text('Save'),
                     ),

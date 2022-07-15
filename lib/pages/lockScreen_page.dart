@@ -33,7 +33,7 @@ class _LockScreenPageState extends State<LockScreenPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(146, 193, 240, 0.9),
+      backgroundColor: const Color.fromRGBO(146, 193, 240, 0.9),
       body: SafeArea(
         child: Column(
           children: [
@@ -43,9 +43,9 @@ class _LockScreenPageState extends State<LockScreenPage> {
             ),
             Expanded(
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  ImageIcon(
+                  const ImageIcon(
                     AssetImage(
                         "assets/icons/ic_stat_monetization_on_bigger.png"),
                     size: 80,
@@ -56,11 +56,11 @@ class _LockScreenPageState extends State<LockScreenPage> {
                   ),
                   buildSecurityText(),
                   isWrong
-                      ? Text(
+                      ? const Text(
                           "Passcode does not match",
-                          style: TextStyle(color: Colors.red),
+                          style: const TextStyle(color: Colors.red),
                         )
-                      : Text(""),
+                      : const Text(""),
                   const SizedBox(
                     height: 40,
                   ),
@@ -330,7 +330,7 @@ class PINNumber extends StatelessWidget {
         obscureText: true,
         textAlign: TextAlign.center,
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.all(16),
+          contentPadding: const EdgeInsets.all(16),
           border: outlineInputBorder,
           filled: true,
           fillColor: Colors.white,
@@ -342,10 +342,6 @@ class PINNumber extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void methodInChild() {
-    print("print in child");
   }
 }
 
@@ -366,7 +362,7 @@ class KeyboardNumber extends StatelessWidget {
       ),
       alignment: Alignment.center,
       child: MaterialButton(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         onPressed: onPressed,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(60),
