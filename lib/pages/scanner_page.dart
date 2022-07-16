@@ -60,7 +60,7 @@ class _ScannerPageState extends State<ScannerPage> {
     // Extract the text from the image
     final extractedText =
         await readPictureTaken(InputImage.fromFilePath(imgPath));
-    print(extractedText);
+    // print(extractedText);
 
     // Send to server for categorisation
     final cat = await categorizeImg(extractedText);
@@ -88,10 +88,13 @@ class _ScannerPageState extends State<ScannerPage> {
       for (TextLine line in block.lines) {
         // Check for price
         String text = line.text.toUpperCase().replaceAll(" ", "");
-        if (text.startsWith("RM")) {
-          text = text.replaceFirst("RM", "");
-          double? price = double.tryParse(text);
+        final formatPrice =
+            RegExp(r'(\d)(\d\.)(?:\d{1,2}(?:,\d{2})*|\d+)(?:\.\d{1,2})?(?!\.)');
+        var matches = formatPrice.firstMatch(text);
+        String? priceString = matches?.group(0);
 
+        if (matches?.group(0) != null) {
+          double? price = double.tryParse(priceString!);
           if (price != null) {
             print("price is: " + price.toString());
             if (price > this.price) {
@@ -104,26 +107,56 @@ class _ScannerPageState extends State<ScannerPage> {
 
         // Check for date
         if (!isCheckedDate) {
-          final date = RegExp(
-              r'(\b(0?[1-9]|[12]\d|30|31)[^\w\d\r\n:](0?[1-9]|1[0-2])[^\w\d\r\n:](\d{4}|\d{2})\b)|(\b(0?[1-9]|1[0-2])[^\w\d\r\n:](0?[1-9]|[12]\d|30|31)[^\w\d\r\n:](\d{4}|\d{2})\b)');
-          var matches = date.firstMatch(line.text);
+          final formatCheck = RegExp(
+              r'(\b(0?[1-9]|[12]\d|30|31)[^\w\d\r\n:](0?[1-9]|1[0-2])[^\w\d\r\n:](\d{4})\b)|(\b(0?[1-9]|1[0-2])[^\w\d\r\n:](0?[1-9]|[12]\d|30|31)[^\w\d\r\n:](\d{4})\b)');
+          var matches = formatCheck.firstMatch(line.text);
+          DateTime parsedDate;
+
           if (matches?.group((0)) != null) {
             String? dateString = matches?.group(0);
-            DateTime parsedDate;
-            print("Date: " + dateString!);
             try {
-              parsedDate = DateFormat('d/M/y').parse(dateString);
+              parsedDate = DateFormat('d/M/y').parse(dateString!);
             } catch (e) {
               try {
-                parsedDate = DateFormat('d-M-y').parse(dateString);
+                parsedDate = DateFormat('d-M-y').parse(dateString!);
               } catch (e) {
-                parsedDate = DateTime.now();
+                try {
+                  parsedDate = DateFormat('d.M.y').parse(dateString!);
+                } catch (e) {
+                  parsedDate = DateTime.now();
+                }
               }
             }
+            print("Date is: " + parsedDate.toString());
             setState(() {
-              this.date = parsedDate;
+              date = parsedDate;
             });
             isCheckedDate = true;
+          } else {
+            final formatCheck2 = RegExp(
+                r'\d{4}[\-/](0[1-9]|1[012])[\-/](0[1-9]|[12][0-9]|3[01])');
+            var matches = formatCheck2.firstMatch(line.text);
+            if (matches?.group((0)) != null) {
+              String? dateString = matches?.group(0);
+              try {
+                parsedDate = DateFormat('y/M/d').parse(dateString!);
+              } catch (e) {
+                try {
+                  parsedDate = DateFormat('y-M-d').parse(dateString!);
+                } catch (e) {
+                  try {
+                    parsedDate = DateFormat('y.M.d').parse(dateString!);
+                  } catch (e) {
+                    parsedDate = DateTime.now();
+                  }
+                }
+              }
+              print("Date is: " + parsedDate.toString());
+              setState(() {
+                date = parsedDate;
+              });
+              isCheckedDate = true;
+            }
           }
         }
       }
