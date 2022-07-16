@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hive/hive.dart';
 import 'package:spendidly/pages/home_line_chart.dart';
 import 'package:spendidly/pages/home_pie_chart.dart';
+import 'package:spendidly/pages/home_streakCalendar_page.dart';
 import 'package:spendidly/pages/transactionList_page.dart';
 
 import '../model/recurrent_transaction.dart';
@@ -24,7 +25,8 @@ class _HomePageState extends State<HomePage> {
   final pages = [
     SingleChildScrollView(
       child: Column(
-        children: const [
+        children: [
+          HomeStreakCalendarPage(),
           HomeLineChart(),
           HomePieChart(),
         ],

@@ -101,7 +101,7 @@ class HomeLineChartState extends State<HomeLineChart> {
           color: isTouched ? Colors.yellow : barColor,
           width: width,
           borderSide: isTouched
-              ? BorderSide(color: Colors.yellow, width: 1)
+              ? const BorderSide(color: Colors.yellow, width: 1)
               : const BorderSide(color: Colors.white, width: 0),
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
