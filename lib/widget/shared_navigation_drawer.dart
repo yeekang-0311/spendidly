@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:spendidly/model/recurrent_transaction.dart';
+import 'package:spendidly/pages/analytic_visualization_page.dart';
+import 'package:spendidly/pages/budget_planner_page.dart';
+import 'package:spendidly/pages/edit_budget_page.dart';
 import 'package:spendidly/pages/recurrentTransactionList_page.dart';
 import 'package:spendidly/pages/scanner_page.dart';
 import 'package:spendidly/pages/settings_page.dart';
@@ -18,7 +20,7 @@ class SharedNavigationDrawer extends StatelessWidget {
           children: <Widget>[
             ListTile(
               contentPadding:
-                  EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               tileColor: ColorTheme.gray,
               textColor: Colors.white,
               leading: const ImageIcon(
@@ -65,6 +67,32 @@ class SharedNavigationDrawer extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const ScannerPage(),
+                ));
+              },
+              hoverColor: Colors.white70,
+            ),
+            ListTile(
+              leading: const Icon(Icons.data_exploration, color: Colors.white),
+              title: const Text(
+                'Analytics & Visualization',
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const AnalyticVisualizationPage(),
+                ));
+              },
+              hoverColor: Colors.white70,
+            ),
+            ListTile(
+              leading: const Icon(Icons.account_balance, color: Colors.white),
+              title: const Text(
+                'Budget Planner',
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const BudgetPlannerPage(),
                 ));
               },
               hoverColor: Colors.white70,

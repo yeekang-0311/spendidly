@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:spendidly/pages/addRecurrentTransaction_page.dart';
 import 'package:spendidly/widget/category_icons.dart';
 import 'package:spendidly/widget/shared_app_bar.dart';
 
@@ -33,7 +36,7 @@ class _RecurrentTransactionListPageState
       backgroundColor: ColorTheme.white,
       appBar: const SharedAppBar(
         isBackButton: true,
-        title: "Recurrent Transactions Page",
+        title: "Recurrent Transactions",
         isSettings: false,
       ),
       body: ValueListenableBuilder<Box<RecurrentTransaction>>(
@@ -46,9 +49,8 @@ class _RecurrentTransactionListPageState
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () => {
-                Navigator.of(context).pushNamed(
-                  '/addTransaction/',
-                )
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const AddRecurrentTransactionPage()))
               },
           tooltip: 'Add Transaction',
           child: const Icon(Icons.add)),
@@ -66,6 +68,7 @@ class _RecurrentTransactionListPageState
             ),
             Text(
               "No Recurrent Transaction Yet!!",
+              textAlign: TextAlign.center,
               style: TextStyle(fontSize: 34),
             ),
             SizedBox(
@@ -111,9 +114,12 @@ class _RecurrentTransactionListPageState
       child: Theme(
         data: ThemeData().copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
-          leading: Icon(
-            CatIcons.getIcon(category),
-            size: 50,
+          leading: SizedBox(
+            width: 40,
+            height: 40,
+            child: SvgPicture.asset(
+              CatIcons.getIcon(category),
+            ),
           ),
           tilePadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
           title: Text(
@@ -122,7 +128,7 @@ class _RecurrentTransactionListPageState
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
           subtitle: Text(frequency),
-          trailing: Container(
+          trailing: SizedBox(
             width: 60,
             child: Text(
               amount,
@@ -167,7 +173,7 @@ class _RecurrentTransactionListPageState
         ],
       );
 
-  void deleteTransaction(RecurrentTransaction trans) {
-    trans.delete();
+  void deleteTransaction(RecurrentTransaction trans) async {
+    await trans.delete();
   }
 }

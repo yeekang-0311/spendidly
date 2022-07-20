@@ -23,12 +23,12 @@ void main() async {
   await Hive.openBox<Transaction>('transaction');
   await Hive.openBox<RecurrentTransaction>('recurrent_transaction');
   await Hive.openBox("settings");
+  await Hive.openBox("budget");
 
   var boxSettings = Hive.box("settings");
-
   // Initial default settings box
-  bool isEmptyBox = boxSettings.isEmpty;
-  if (isEmptyBox) {
+  bool isEmptySettingBox = boxSettings.isEmpty;
+  if (isEmptySettingBox) {
     // Fill in the default values
     boxSettings.putAll({
       "passcodeEnabled": "false",
@@ -36,6 +36,22 @@ void main() async {
       "notificationEnabled": "false",
       "notificationHour": 10,
       "notificationMinute": 15,
+    });
+  }
+
+  var boxBudget = Hive.box("budget");
+  // Initial default budget box
+  bool isEmptyBudgetBox = boxBudget.isEmpty;
+  if (isEmptyBudgetBox) {
+    // Fill in the default values
+    boxBudget.putAll({
+      "isOverallBudget": true,
+      "generalBudget": 0,
+      "foodBudget": 0,
+      "sportsBudget": 0,
+      "transportationBudget": 0,
+      "entertainmentBudget": 0,
+      "overallBudget": 0,
     });
   }
 

@@ -1,19 +1,21 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import 'package:spendidly/widget/category_icons.dart';
 import 'package:spendidly/widget/color_theme.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../model/transaction.dart';
 
-class HomePieChart extends StatefulWidget {
-  const HomePieChart({Key? key}) : super(key: key);
+class PieChartVisualization extends StatefulWidget {
+  const PieChartVisualization({Key? key}) : super(key: key);
 
   @override
-  State<HomePieChart> createState() => _HomePieChartState();
+  State<PieChartVisualization> createState() => _PieChartVisualizationState();
 }
 
-class _HomePieChartState extends State<HomePieChart> {
+class _PieChartVisualizationState extends State<PieChartVisualization> {
   int touchedIndex = -1;
   late double _sumGe, _sumEn, _sumTr, _sumFo, _sumSp;
 
@@ -26,7 +28,7 @@ class _HomePieChartState extends State<HomePieChart> {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 1,
+      aspectRatio: 0.90,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Card(
@@ -36,11 +38,22 @@ class _HomePieChartState extends State<HomePieChart> {
           child: Column(
             children: [
               const SizedBox(
-                height: 18,
+                height: 20,
+              ),
+              Text(
+                DateFormat.yMMMM().format(DateTime.now()) + " Month",
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const Text(
-                "Monthly Expenses",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                "Total Amount According to Category (RM)",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Color.fromRGBO(0, 0, 0, 0.5),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(
                 height: 10,
@@ -255,7 +268,7 @@ class _HomePieChartState extends State<HomePieChart> {
 }
 
 class _Badge extends StatelessWidget {
-  final IconData icon;
+  final String icon;
   final double size;
   final Color borderColor;
 
@@ -289,7 +302,9 @@ class _Badge extends StatelessWidget {
       ),
       padding: EdgeInsets.all(size * .15),
       child: Center(
-        child: Icon(icon),
+        child: SvgPicture.asset(
+          icon,
+        ),
       ),
     );
   }

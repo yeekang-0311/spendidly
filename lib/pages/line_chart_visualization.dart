@@ -1,25 +1,34 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 
 import '../model/transaction.dart';
 
-class HomeLineChart extends StatefulWidget {
-  const HomeLineChart({Key? key}) : super(key: key);
+class LineChartVisualization extends StatefulWidget {
+  const LineChartVisualization({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => HomeLineChartState();
+  State<StatefulWidget> createState() => LineChartVisualizationState();
 }
 
-class HomeLineChartState extends State<HomeLineChart> {
+class LineChartVisualizationState extends State<LineChartVisualization> {
   final Color barBackgroundColor = const Color(0xff72d8bf);
   final Duration animDuration = const Duration(milliseconds: 250);
   late double _sumMo, _sumTu, _sumWe, _sumTh, _sumFr, _sumSa, _sumSu;
+  late DateTime viewingWeek;
 
   int touchedIndex = -1;
 
   @override
   void initState() {
+    var now = DateTime.now();
+    while (now.weekday != 1) {
+      now = now.subtract(const Duration(days: 1));
+    }
+    setState(() {
+      viewingWeek = now;
+    });
     getTransData();
     super.initState();
   }
@@ -43,9 +52,9 @@ class HomeLineChartState extends State<HomeLineChart> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    const Text(
-                      'Weekly',
-                      style: TextStyle(
+                    Text(
+                      DateFormat.MMMd().format(viewingWeek) + " Week",
+                      style: const TextStyle(
                           color: Color(0xff0f4a3c),
                           fontSize: 24,
                           fontWeight: FontWeight.bold),
@@ -294,37 +303,30 @@ class HomeLineChartState extends State<HomeLineChart> {
           sumSu = 0;
 
       for (var i = 0; i < transactions.length; i++) {
-        var monday = 1;
-        var now = DateTime.now();
-
-        while (now.weekday != monday) {
-          now = now.subtract(const Duration(days: 1));
-        }
-
-        if (now.isSameDate(transactions[i].createdDate)) {
+        if (viewingWeek.isSameDate(transactions[i].createdDate)) {
           sumMo = sumMo + transactions[i].amount;
-        } else if (now
-            .add(Duration(days: 1))
+        } else if (viewingWeek
+            .add(const Duration(days: 1))
             .isSameDate(transactions[i].createdDate)) {
           sumTu = sumTu + transactions[i].amount;
-        } else if (now
-            .add(Duration(days: 2))
+        } else if (viewingWeek
+            .add(const Duration(days: 2))
             .isSameDate(transactions[i].createdDate)) {
           sumWe = sumWe + transactions[i].amount;
-        } else if (now
-            .add(Duration(days: 3))
+        } else if (viewingWeek
+            .add(const Duration(days: 3))
             .isSameDate(transactions[i].createdDate)) {
           sumTh = sumTh + transactions[i].amount;
-        } else if (now
-            .add(Duration(days: 4))
+        } else if (viewingWeek
+            .add(const Duration(days: 4))
             .isSameDate(transactions[i].createdDate)) {
           sumFr = sumFr + transactions[i].amount;
-        } else if (now
-            .add(Duration(days: 5))
+        } else if (viewingWeek
+            .add(const Duration(days: 5))
             .isSameDate(transactions[i].createdDate)) {
           sumSa = sumSa + transactions[i].amount;
-        } else if (now
-            .add(Duration(days: 6))
+        } else if (viewingWeek
+            .add(const Duration(days: 6))
             .isSameDate(transactions[i].createdDate)) {
           sumSu = sumSu + transactions[i].amount;
         }

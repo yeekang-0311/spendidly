@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class CatIcons {
-  static IconData food = Icons.restaurant;
-  static IconData entertainment = Icons.headset;
-  static IconData sports = Icons.sports_basketball;
-  static IconData transportation = Icons.bus_alert;
-  static IconData general = Icons.abc;
+  static String food = "assets/icons/food.svg";
+  static String entertainment = "assets/icons/entertainment.svg";
+  static String sports = "assets/icons/sports.svg";
+  static String transportation = "assets/icons/car.svg";
+  static String general = "assets/icons/general.svg";
 
-  static IconData getIcon(category) {
+  static String getIcon(category) {
     switch (category) {
       case 'Food':
         {

@@ -1,15 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:spendidly/pages/addTransaction_page.dart';
 import 'package:spendidly/widget/shared_app_bar.dart';
+import 'package:images_picker/images_picker.dart';
 
 class ScannerPage extends StatefulWidget {
   const ScannerPage({Key? key}) : super(key: key);
@@ -23,7 +23,7 @@ class _ScannerPageState extends State<ScannerPage> {
   double price = 0;
   DateTime date = DateTime.now();
   late TextRecognizer textRecognizer;
-  final _imgPicker = ImagePicker();
+  // final _imgPicker = ImagePicker();
 
   @override
   void initState() {
@@ -37,46 +37,71 @@ class _ScannerPageState extends State<ScannerPage> {
     super.dispose();
   }
 
-  Future pickImageAndGetPath() async {
-    try {
-      final image = await _imgPicker.pickImage(
-          source: ImageSource.gallery, imageQuality: 100);
-      if (image == null) return;
-      return image.path;
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
+  Future getImage() async {
+    List<Media>? res = await ImagesPicker.pick(
+      count: 1,
+      pickType: PickType.image,
+    );
+    if (res != null) {
+      return res[0].path;
     }
-    return "";
+    return null;
   }
 
+  // Future pickImageAndGetPath() async {
+  //   try {
+  //     final image = await _imgPicker.pickImage(
+  //         source: ImageSource.gallery, imageQuality: 100);
+  //     if (image == null) {
+  //       return null;
+  //     } else {
+  //       return image.path;
+  //     }
+  //   } on PlatformException catch (e) {
+  //     print('Failed to pick image: $e');
+  //   }
+  //   return null;
+  // }
+
   Future extractAndCategorize(String imgPath) async {
-    // Start loading
-    setState(() {
-      isLoading = true;
-      price = 0;
-      date = DateTime.now();
-    });
+    // Check network connectivity
+    if (await checkConnectivity()) {
+      // Start loading
+      setState(() {
+        isLoading = true;
+        price = 0;
+        date = DateTime.now();
+      });
 
-    // Extract the text from the image
-    final extractedText =
-        await readPictureTaken(InputImage.fromFilePath(imgPath));
-    // print(extractedText);
+      // Extract the text from the image
+      final extractedText =
+          await readPictureTaken(InputImage.fromFilePath(imgPath));
+      // print(extractedText);
 
-    // Send to server for categorisation
-    final cat = await categorizeImg(extractedText);
+      // Send to server for categorisation
+      final cat = await categorizeImg(extractedText);
 
-    setState(() {
-      isLoading = false;
-    });
+      setState(() {
+        isLoading = false;
+      });
 
-    // Navigate to add transaction page
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => AddTransactionPage(
-        cat: cat,
-        price: price,
-        recognisedDate: date,
-      ),
-    ));
+      // Navigate to add transaction page
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => AddTransactionPage(
+          cat: cat,
+          price: price,
+          recognisedDate: date,
+        ),
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Connectivity issue"),
+          backgroundColor: Colors.red,
+        ),
+      );
+      Navigator.of(context).pop();
+    }
   }
 
   Future<String> readPictureTaken(InputImage img) async {
@@ -96,7 +121,7 @@ class _ScannerPageState extends State<ScannerPage> {
         if (matches?.group(0) != null) {
           double? price = double.tryParse(priceString!);
           if (price != null) {
-            print("price is: " + price.toString());
+            // print("price is: " + price.toString());
             if (price > this.price) {
               setState(() {
                 this.price = price;
@@ -127,7 +152,7 @@ class _ScannerPageState extends State<ScannerPage> {
                 }
               }
             }
-            print("Date is: " + parsedDate.toString());
+            // print("Date is: " + parsedDate.toString());
             setState(() {
               date = parsedDate;
             });
@@ -151,7 +176,7 @@ class _ScannerPageState extends State<ScannerPage> {
                   }
                 }
               }
-              print("Date is: " + parsedDate.toString());
+              // print("Date is: " + parsedDate.toString());
               setState(() {
                 date = parsedDate;
               });
@@ -164,16 +189,28 @@ class _ScannerPageState extends State<ScannerPage> {
     return recognizedText.text;
   }
 
-  Future<String> categorizeImg(String text) async {
-    // Test http request
-    var url = Uri.parse('http://192.168.0.161:8080/');
+  Future<bool> checkConnectivity() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    } on SocketException catch (_) {
+      return false;
+    }
+  }
 
+  Future<String> categorizeImg(String text) async {
+    var url = Uri.parse('http://192.168.0.161:8080/');
     try {
       var response = await http.post(url, body: {'text': text});
       if (response.statusCode == 200) {
         // If the call to the server was successful, parse the JSON
         List<double> confidentResponse =
             List<double>.from(json.decode(response.body));
+        // print(confidentResponse);
         double maxConfident = confidentResponse.reduce(max);
         int indexOfMax = confidentResponse.indexOf(maxConfident);
         List<String> labels = [
@@ -235,8 +272,9 @@ class _ScannerPageState extends State<ScannerPage> {
                     style: ElevatedButton.styleFrom(
                         fixedSize: const Size(250, 50)),
                     onPressed: () async {
-                      String imgPath = await pickImageAndGetPath();
-                      if (imgPath != "") {
+                      // String? imgPath = await pickImageAndGetPath();
+                      String? imgPath = await getImage();
+                      if (imgPath != null) {
                         await extractAndCategorize(imgPath);
                       }
                     },

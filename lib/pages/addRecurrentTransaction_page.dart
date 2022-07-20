@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:spendidly/model/recurrent_transaction.dart';
 
 import '../widget/shared_app_bar.dart';
 
-class EditRecurrentTransactionPage extends StatefulWidget {
-  final RecurrentTransaction trans;
-  const EditRecurrentTransactionPage({Key? key, required this.trans})
-      : super(key: key);
+class AddRecurrentTransactionPage extends StatefulWidget {
+  const AddRecurrentTransactionPage({Key? key}) : super(key: key);
 
   @override
-  State<EditRecurrentTransactionPage> createState() =>
-      _EditRecurrentTransactionPageState();
+  State<AddRecurrentTransactionPage> createState() =>
+      _AddRecurrentTransactionPageState();
 }
 
-class _EditRecurrentTransactionPageState
-    extends State<EditRecurrentTransactionPage> {
+class _AddRecurrentTransactionPageState
+    extends State<AddRecurrentTransactionPage> {
   late final TextEditingController _name;
   late final TextEditingController _amount;
   late final TextEditingController _note;
@@ -24,11 +23,11 @@ class _EditRecurrentTransactionPageState
 
   @override
   void initState() {
-    _frequency = widget.trans.frequency;
-    _name = TextEditingController(text: widget.trans.name);
-    _amount = TextEditingController(text: widget.trans.amount.toString());
-    _category = widget.trans.category;
-    _note = TextEditingController(text: widget.trans.note);
+    _name = TextEditingController();
+    _amount = TextEditingController();
+    _note = TextEditingController();
+    _frequency = "Daily";
+    _category = "General";
     super.initState();
   }
 
@@ -44,7 +43,7 @@ class _EditRecurrentTransactionPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const SharedAppBar(
-        title: 'Edit Recurrent Transaction',
+        title: 'Add Recurrent Transaction',
         isBackButton: true,
         isSettings: false,
       ),
@@ -271,7 +270,7 @@ class _EditRecurrentTransactionPageState
                             ),
                           );
                         } else {
-                          updateTransaction(
+                          addTransaction(
                               _name.text,
                               double.parse(_amount.text),
                               _category,
@@ -282,23 +281,6 @@ class _EditRecurrentTransactionPageState
                       },
                       child: const Text('Save'),
                     ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        minimumSize:
-                            MaterialStateProperty.all(const Size(90, 8)),
-                        padding:
-                            MaterialStateProperty.all(const EdgeInsets.all(15)),
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.amber),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Cancel'),
-                    )
                   ],
                 ),
               ],
@@ -309,7 +291,7 @@ class _EditRecurrentTransactionPageState
     );
   }
 
-  Future updateTransaction(
+  Future addTransaction(
     String name,
     double amount,
     String category,
@@ -317,14 +299,16 @@ class _EditRecurrentTransactionPageState
     DateTime lastUpdate,
     String freq,
   ) async {
-    widget.trans.name = name;
-    widget.trans.lastUpdate = lastUpdate;
-    widget.trans.amount = amount;
-    widget.trans.category = category;
-    widget.trans.note = note;
-    widget.trans.frequency = freq;
+    final recurrentTransaction = RecurrentTransaction()
+      ..name = name
+      ..lastUpdate = lastUpdate
+      ..amount = amount
+      ..category = category
+      ..note = note
+      ..frequency = freq;
 
-    await widget.trans.save();
+    await Hive.box<RecurrentTransaction>('recurrent_transaction')
+        .add(recurrentTransaction);
     Navigator.of(context).pop();
   }
 }

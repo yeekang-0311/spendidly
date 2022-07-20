@@ -327,10 +327,6 @@ class PINNumber extends StatelessWidget {
       ),
     );
   }
-
-  void methodInChild() {
-    print("print in child");
-  }
 }
 
 class KeyboardNumber extends StatelessWidget {

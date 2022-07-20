@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:spendidly/model/transaction.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -78,21 +79,23 @@ class _TransactionListPageState extends State<TransactionListPage> {
                     },
                   ),
                   Container(
-                      width: 264,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 7),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            width: 2,
-                            color: const Color.fromARGB(255, 76, 187, 252)),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Center(
-                          child: Text(
+                    width: 264,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 30, vertical: 7),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          width: 1,
+                          color: const Color.fromARGB(255, 76, 187, 252)),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Center(
+                      child: Text(
                         DateFormat.yMMMM().format(viewingMonth),
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
-                      ))),
+                      ),
+                    ),
+                  ),
                   IconButton(
                     icon: const Icon(Icons.arrow_circle_right),
                     iconSize: 30,
@@ -151,7 +154,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
                         const EdgeInsets.symmetric(horizontal: 30, vertical: 7),
                     decoration: BoxDecoration(
                       border: Border.all(
-                          width: 2,
+                          width: 1,
                           color: const Color.fromARGB(255, 76, 187, 252)),
                       borderRadius: BorderRadius.circular(4),
                     ),
@@ -211,9 +214,12 @@ class _TransactionListPageState extends State<TransactionListPage> {
       child: Theme(
         data: ThemeData().copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
-          leading: Icon(
-            CatIcons.getIcon(category),
-            size: 50,
+          leading: SizedBox(
+            width: 40,
+            height: 40,
+            child: SvgPicture.asset(
+              CatIcons.getIcon(category),
+            ),
           ),
           tilePadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
           title: Text(
@@ -265,7 +271,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
         ],
       );
 
-  void deleteTransaction(Transaction trans) {
-    trans.delete();
+  void deleteTransaction(Transaction trans) async {
+    await trans.delete();
   }
 }

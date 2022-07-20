@@ -38,9 +38,6 @@ class NotificationService {
     final now = tz.TZDateTime.now(tz.local);
     final scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day,
         time.hour, time.minute, time.second);
-    // print(scheduledDate);
-    // print(now);
-    // print("is the time before? : " + scheduledDate.isBefore(now).toString());
 
     return scheduledDate.isBefore(now)
         ? scheduledDate.add(const Duration(days: 1))
@@ -85,6 +82,27 @@ class NotificationService {
           UILocalNotificationDateInterpretation.absoluteTime,
       androidAllowWhileIdle: true,
       matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
+
+  Future<void> showNotification(int id, String title, String body) async {
+    await flutterLocalNotificationsPlugin.show(
+      id,
+      title,
+      body,
+      const NotificationDetails(
+        android: AndroidNotificationDetails('main_channel', 'Main Channel',
+            channelDescription: 'main channel notifications',
+            importance: Importance.max,
+            priority: Priority.max,
+            icon: '@drawable/ic_stat_monetization_on'),
+        iOS: IOSNotificationDetails(
+          sound: 'default.wav',
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
     );
   }
 }

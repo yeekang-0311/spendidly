@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:spendidly/model/transaction.dart';
 
@@ -156,6 +157,9 @@ class _TransactionPageState extends State<EditTransactionPage> {
                       child: Padding(
                         padding: const EdgeInsets.only(top: 8),
                         child: TextField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.deny(RegExp('[, -]'))
+                          ],
                           controller: _amount,
                           decoration: const InputDecoration(
                             hintText: 'Amount',
@@ -307,14 +311,14 @@ class _TransactionPageState extends State<EditTransactionPage> {
     );
   }
 
-  void updateTransaction(Transaction trans) {
+  void updateTransaction(Transaction trans) async {
     trans.name = _name.text;
     trans.amount = double.parse(_amount.text);
     trans.category = _category;
     trans.createdDate = _date;
     trans.note = _note.text;
 
-    trans.save();
+    await trans.save();
     Navigator.of(context).pop();
   }
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import 'package:spendidly/model/recurrent_transaction.dart';
 import 'package:spendidly/model/transaction.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:spendidly/services/notification_service.dart';
 
 import '../widget/shared_app_bar.dart';
 
@@ -23,6 +26,7 @@ class AddTransactionPage extends StatefulWidget {
 }
 
 class _TransactionPageState extends State<AddTransactionPage> {
+  final boxBudget = Hive.box('budget');
   late final TextEditingController _name;
   late final TextEditingController _amount;
   late final TextEditingController _note;
@@ -181,6 +185,9 @@ class _TransactionPageState extends State<AddTransactionPage> {
                       child: Padding(
                         padding: const EdgeInsets.only(top: 8),
                         child: TextField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.deny(RegExp('[, -]'))
+                          ],
                           controller: _amount,
                           decoration: const InputDecoration(
                             hintText: 'Amount',
@@ -379,8 +386,9 @@ class _TransactionPageState extends State<AddTransactionPage> {
       ..category = category
       ..note = note;
 
-    Hive.box<Transaction>('transaction').add(transaction);
+    await Hive.box<Transaction>('transaction').add(transaction);
 
+    // For recurrent transaction
     if (_frequency != "None") {
       final recurrentTransaction = RecurrentTransaction()
         ..name = name
@@ -390,10 +398,53 @@ class _TransactionPageState extends State<AddTransactionPage> {
         ..note = note
         ..frequency = _frequency;
 
-      Hive.box<RecurrentTransaction>('recurrent_transaction')
+      await Hive.box<RecurrentTransaction>('recurrent_transaction')
           .add(recurrentTransaction);
     }
-
+    checkBudgetAndAlert(category);
     Navigator.of(context).pop();
+  }
+
+  void checkBudgetAndAlert(String category) {
+    final Box<Transaction> boxTransaction = Hive.box("transaction");
+    final List<Transaction> filteredTransaction;
+    final double budget;
+    if (boxBudget.get("isOverallBudget")) {
+      budget = double.parse(boxBudget.get("overallBudget"));
+      filteredTransaction = boxTransaction.values
+          .toList()
+          .cast<Transaction>()
+          .where(
+              (element) => (element.createdDate.month == DateTime.now().month))
+          .toList();
+    } else {
+      budget = double.parse(boxBudget.get(category.toLowerCase() + "Budget"));
+      filteredTransaction = boxTransaction.values
+          .toList()
+          .cast<Transaction>()
+          .where((element) =>
+              (element.createdDate.month == DateTime.now().month) &&
+              (element.category == category))
+          .toList();
+    }
+    double spent = 0;
+    for (var trans in filteredTransaction) {
+      spent = spent + trans.amount;
+    }
+    final remaining = budget - spent;
+
+    if (remaining.isNegative) {
+      NotificationService().showNotification(
+          1,
+          "Budget Alert",
+          "Budget is Overflowed by: " +
+              NumberFormat('\$#,###.00').format((remaining * -1)));
+    } else if ((remaining / budget) <= 0.15) {
+      NotificationService().showNotification(
+          2,
+          "Budget Alert",
+          "Budget is low! Budget left: " +
+              NumberFormat('\$#,###.00').format(remaining));
+    }
   }
 }

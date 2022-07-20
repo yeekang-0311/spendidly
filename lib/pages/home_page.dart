@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hive/hive.dart';
-import 'package:spendidly/pages/home_line_chart.dart';
-import 'package:spendidly/pages/home_pie_chart.dart';
 import 'package:spendidly/pages/home_streakCalendar_page.dart';
 import 'package:spendidly/pages/transactionList_page.dart';
 
@@ -25,10 +23,8 @@ class _HomePageState extends State<HomePage> {
   final pages = [
     SingleChildScrollView(
       child: Column(
-        children: [
+        children: const [
           HomeStreakCalendarPage(),
-          HomeLineChart(),
-          HomePieChart(),
         ],
       ),
     ),
@@ -37,7 +33,7 @@ class _HomePageState extends State<HomePage> {
 
   final titles = [
     'Home Page',
-    'Transaction Page',
+    'Transaction',
   ];
 
   @override
